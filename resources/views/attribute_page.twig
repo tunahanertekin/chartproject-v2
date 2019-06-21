@@ -1,0 +1,250 @@
+{% extends 'layouts/navbar.twig' %}
+
+{% block content %}
+
+{% set questionInfo = allData[0] %}
+{% set filterArr = allData[1] %}
+{% set optionArr = allData[2] %}
+{% set data = allData[3] %}
+{% set optionFilterArr = allData[4] %}
+{% set dateFilterArr = allData[5] %}
+{% set countryArr = allData[6] %}
+
+{% set radarData1 = data %}
+{% set radarData2 = data %}
+
+
+{% if radar %}
+    {% if radar == true %}
+
+        {% set radarData1 = compareData[0][3] %}
+        {% set radarData2 = compareData[1][3] %}
+        
+    {% endif %}
+{% endif %}
+<script>
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+</script>
+
+
+
+<form style="position:absolute;top:150px;left:550px;text-align:center;" action="/public/multiple-choices/detailed/{{ questionInfo[0] }}" method="POST">
+    <button class="button" name="specialize" value="notassigned">Clear All Filters</button> <br><br>
+    <div style="font-style: italic;">
+        Option-scoped statistics: <br>
+    </div>
+    
+    {% for option in optionArr %}
+        <input type="checkbox" name="check{{ option }}">{{ option }} <br>
+    {% endfor %}
+
+    <br>
+
+    <div style="font-style: italic;">
+            Dates between: <br>
+    </div>
+
+    <input type="date" name="fromDate">
+    <input type="date" name="toDate">
+
+    <br><br>
+
+    <div style="font-style: italic;">
+            Country: <br>
+    </div>
+    <select name="country">
+
+        <option value="All"> All </option>
+        {% for country in countryArr %}
+            <option value="{{ country }}"> {{ country }} </option>
+        {% endfor %}
+        
+    </select> 
+
+    <br><br>
+    <button class="button" name="specialize" value="APPLY">Apply Filters</button>
+    
+
+</form>
+
+<div style="position:absolute;top:650;left:204px;">
+    <button class="button" onclick="hideOrShow()">See Radar</button>
+    <script>
+        var count = 0;
+        function hideOrShow(){
+            if(count%2==0){
+                count++;
+                disable();
+            }
+            else{
+                count++;
+                enable();
+            }
+        }
+        function enable(){
+            document.getElementById("radar").style.visibility = "visible";
+        }
+        function disable(){
+            document.getElementById("radar").style.visibility = "hidden";
+        }
+    </script>
+</div>
+
+
+
+<br><br><br><br>
+
+<canvas style="position:absolute;left:100px;top:100px;" id="myChart" width="400" height="400"></canvas>
+<div style="position:absolute;top:550;left:100;">
+    {% if "optionFilter" in filterArr %}
+        This is the statistics of submissions of people who selected option/options
+        {% for var in optionFilterArr %}
+            {{ var }} 
+        {% endfor %}
+        {% if "dateFilter" in filterArr %}
+            between dates {{ dateFilterArr[0] }} and {{ dateFilterArr[1] }}
+        {% endif %}
+        .
+    {% elseif "dateFilter" in filterArr %}
+        This is the statistics of submissions which are submitted between dates {{ dateFilterArr[0] }} and {{ dateFilterArr[1] }}.
+    {% endif %}
+</div>
+
+
+
+<script>
+    var datajson = '{{ data|json_encode()|raw }}';
+    data = JSON.parse(datajson);
+
+    var keyarr = [];
+    var valarr = [];
+
+    for(var key in data){
+        keyarr.push(key);
+        valarr.push(data[key]);
+    }
+
+    var colorArr = [];
+    for(var i=0;i<keyarr.length;i++){
+        colorArr.push(getRandomColor());
+    }
+    
+    var question = '{{questionInfo[1]}}';
+    
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: keyarr,
+        datasets: [{
+        backgroundColor: colorArr,
+        data: valarr
+        }]
+    },
+    options: {
+        responsive: false,
+        title: {
+            display: true,
+            text: question
+        }
+    }
+});
+</script>
+
+
+<div id="radar">
+    <form style="position:absolute;top:750;left:130px;" action="/public/multiple-choices/detailed/{{ questionInfo[0] }}/radar" method = "POST">
+    
+        <div style="font-style: italic;">
+            First time period:
+        </div>
+
+        <input type="date" name="firstPeriodFromDate"> - <input type="date" name="firstPeriodToDate"> <br>
+        
+        <div style="font-style: italic;">
+            Second time period:
+        </div>
+
+        <input type="date" name="secondPeriodFromDate"> - <input type="date" name="secondPeriodToDate">
+        
+        <br><br>
+        <button class="button" name="compareDates">Compare Time Periods</button>
+    </form>
+    <br>
+    <canvas style="position:absolute;right:500px;top:650px;" id="myChartRadar" width="400" height="400"></canvas>
+    <script>
+        var radarDatajson1 = '{{ radarData1|json_encode()|raw }}';
+        radarData1 = JSON.parse(radarDatajson1);
+
+        var keyarr1 = [];
+        var valarr1 = [];
+
+        for(var key in radarData1){
+            keyarr1.push(key);
+            valarr1.push(radarData1[key]);
+            //document.write("***:"+radarData1[key]);
+        }
+
+        var firstDatePeriod = '{{compareData[0][5][0]}}' +"-"+ '{{compareData[0][5][1]}}';
+        var secondDatePeriod = '{{compareData[1][5][0]}}' +"-"+ '{{compareData[1][5][1]}}';
+
+        var radarDatajson2 = '{{ radarData2|json_encode()|raw }}';
+        radarData2 = JSON.parse(radarDatajson2);
+
+        var keyarr2 = [];
+        var valarr2 = [];
+
+        for(var key in radarData2){
+            keyarr2.push(key);
+            valarr2.push(radarData2[key]);
+        }
+
+        var max = Math.max(Math.max(...valarr1),Math.max(...valarr2));
+
+        
+
+        var valuesCanvas = document.getElementById("myChartRadar");
+
+        var valuesData = {
+        labels: keyarr1,
+        datasets: [{
+            label: firstDatePeriod,
+            backgroundColor: "rgba(200,0,0,0.2)",
+            data: valarr1
+        },
+        {
+            label: secondDatePeriod,
+            backgroundColor: "rgba(0,0,200,0.2)",
+            data: valarr2
+        }
+        ]
+        };
+
+        var radarChart = new Chart(valuesCanvas, {
+            type: 'radar',
+            data: valuesData,
+            options: {
+                responsive: false,
+                scale: {
+                    ticks: {
+                    min: 0,
+                    max: max
+                    }
+                }
+        }
+        
+        });
+        
+    </script>
+
+</div>
+
+
+{% endblock %}

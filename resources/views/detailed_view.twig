@@ -1,0 +1,156 @@
+{% extends 'layouts/navbar.twig' %}
+
+
+{% block content %}
+
+
+<script>
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+</script>
+
+<br><br><br>
+
+<h2 style="text-align:center;font-style: italic;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+              color:#f38d30;"> Form: {{ formName }} </h2>
+<p style="text-align:center;">(detailed view)</p>
+ 
+<br><br>
+
+
+<form style="text-align:center;" method="get" action="/public/multiple-choices/detailed">
+
+    <button class="button" name="detailedView" value="detailedView">get more detailed info</button>
+
+</form>
+
+
+ <br><br>
+
+
+
+
+{% for key,value in resArr %}
+  
+  <script>
+    var monthlyChoosed=[];
+  </script>
+
+  {% for monKey,monVal in value %}
+    
+    <script>
+      var monvaljson = '{{ monVal|json_encode()|raw }}';
+      monVal = JSON.parse(monvaljson);
+
+      for(var key in monVal){
+        
+        monthlyChoosed.push(monVal[key]);
+        
+      }
+    </script>
+    
+  {% endfor %}
+  <br><br>
+
+  
+    <div style="display:inline-block;border-radius:7px;width:500px;text-align:center;
+    font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+    font-size:20px;background-color:#f38d30;color:aliceblue;" class="w3-container">
+      <p>Question: {{ key }}</p>
+    </div>
+
+      <div>
+          
+              <canvas style="display:inline;text-align:center;" id="line-chart{{ key }}" width="800" height="450"></canvas>
+
+              <script>
+                  //var datasetArr;
+                  var months = [ "January", "February", "March", "April", "May", "June", 
+                  "July", "August", "September", "October", "November", "December" ];
+                  var month = parseInt('{{ month }}');
+
+                  monthArr = [];
+                  for(var i=0;i<12;i++){
+                    monthArr[i] = months[(month+i)%12];
+                    
+                  }
+                  
+                  var optNum = monthlyChoosed.length/12;
+                  
+                  var optionArr = [];
+                  for(var i=0;i<optNum;i++){
+                    optionArr[i]=[];
+                  }
+                  
+                  for(var i=0;i<monthlyChoosed.length;i++){
+                    optionArr[i%optNum].push(monthlyChoosed[i]);
+                  }
+
+                  var dataset=[];
+                  
+              </script>
+
+                  {% for monKey,monVal in value %}
+
+                    <script>
+                      var i=0;
+                      var allOptions=[];
+                      for(var key in monVal){
+                        allOptions.push(key);
+                        i++;
+                        if(i==optNum)
+                          break;
+                      }
+                    
+                    </script>
+
+
+                  {% endfor %}
+                  
+                  
+                  <script>
+
+                    for(var i=0;i<optNum;i++){
+                      dataset[i] = { 
+                        data: optionArr[i],
+                        label: allOptions[i],
+                        borderColor: getRandomColor(),
+                        fill: false
+                      };
+                    }
+                    
+      
+
+                    new Chart(document.getElementById("line-chart{{ key }}"), {
+                      type: 'line',
+                      data: {
+                        labels: monthArr,
+                        datasets: dataset
+                      },
+                      options: {
+                        responsive: false,
+                        title: {
+                          display: true,
+                          text: 'Times that this option is choosed'
+                        }
+                      }
+                    });
+              
+                  </script>
+
+      </div>
+
+{% endfor %}
+
+
+
+
+
+
+{% endblock %}

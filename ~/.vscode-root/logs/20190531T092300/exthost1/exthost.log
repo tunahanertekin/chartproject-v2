@@ -1,0 +1,24 @@
+[2019-05-31 09:23:11.510] [exthost] [info] extension host started
+[2019-05-31 09:23:11.548] [exthost] [info] ExtensionService#_doActivateExtension vscode.php-language-features {"startup":false,"activationEvent":"onLanguage:php"}
+[2019-05-31 09:23:11.548] [exthost] [info] ExtensionService#loadCommonJSModule /usr/share/code/resources/app/extensions/php-language-features/dist/phpMain
+[2019-05-31 09:23:11.671] [exthost] [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch {"startup":true,"activationEvent":"*"}
+[2019-05-31 09:23:11.671] [exthost] [info] ExtensionService#loadCommonJSModule /usr/share/code/resources/app/extensions/debug-auto-launch/dist/extension
+[2019-05-31 09:23:11.771] [exthost] [info] ExtensionService#_doActivateExtension vscode.emmet {"startup":true,"activationEvent":"*"}
+[2019-05-31 09:23:11.772] [exthost] [info] ExtensionService#loadCommonJSModule /usr/share/code/resources/app/extensions/emmet/dist/extension
+[2019-05-31 09:23:11.847] [exthost] [info] ExtensionService#_doActivateExtension vscode.git {"startup":true,"activationEvent":"*"}
+[2019-05-31 09:23:11.847] [exthost] [info] ExtensionService#loadCommonJSModule /usr/share/code/resources/app/extensions/git/dist/main
+[2019-05-31 09:23:12.250] [exthost] [info] ExtensionService#_doActivateExtension vscode.merge-conflict {"startup":true,"activationEvent":"*"}
+[2019-05-31 09:23:12.250] [exthost] [info] ExtensionService#loadCommonJSModule /usr/share/code/resources/app/extensions/merge-conflict/dist/extension
+[2019-05-31 09:23:12.339] [exthost] [info] ExtensionService#_doActivateExtension Equinusocio.vsc-material-theme {"startup":true,"activationEvent":"*"}
+[2019-05-31 09:23:12.339] [exthost] [info] ExtensionService#loadCommonJSModule /home/tunahan/.vscode/extensions/equinusocio.vsc-material-theme-2.9.0/out/src/material.theme.config
+[2019-05-31 09:23:12.726] [exthost] [info] ExtensionService#_doActivateExtension mblode.twig-language {"startup":true,"activationEvent":"*"}
+[2019-05-31 09:23:12.726] [exthost] [info] ExtensionService#loadCommonJSModule /home/tunahan/.vscode/extensions/mblode.twig-language-0.8.7/extension/index
+[2019-05-31 09:23:13.065] [exthost] [info] eager extensions activated
+[2019-05-31 09:23:28.549] [exthost] [info] ExtensionService#_doActivateExtension vscode.configuration-editing {"startup":false,"activationEvent":"onLanguage:jsonc"}
+[2019-05-31 09:23:28.549] [exthost] [info] ExtensionService#loadCommonJSModule /usr/share/code/resources/app/extensions/configuration-editing/dist/extension
+[2019-05-31 09:23:28.649] [exthost] [info] ExtensionService#_doActivateExtension vscode.json-language-features {"startup":false,"activationEvent":"onLanguage:jsonc"}
+[2019-05-31 09:23:28.649] [exthost] [info] ExtensionService#loadCommonJSModule /usr/share/code/resources/app/extensions/json-language-features/client/dist/jsonMain
+[2019-05-31 09:23:28.876] [exthost] [info] ExtensionService#_doActivateExtension vscode.typescript-language-features {"startup":false,"activationEvent":"onLanguage:jsonc"}
+[2019-05-31 09:23:28.876] [exthost] [info] ExtensionService#loadCommonJSModule /usr/share/code/resources/app/extensions/typescript-language-features/dist/extension
+[2019-05-31 09:31:17.294] [exthost] [info] ExtensionService#_doActivateExtension vscode.html-language-features {"startup":false,"activationEvent":"onLanguage:html"}
+[2019-05-31 09:31:17.294] [exthost] [info] ExtensionService#loadCommonJSModule /usr/share/code/resources/app/extensions/html-language-features/client/dist/htmlMain

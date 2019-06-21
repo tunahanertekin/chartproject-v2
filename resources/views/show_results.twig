@@ -1,0 +1,25 @@
+{% extends 'layouts/navbar.twig' %}
+
+{% block content %}
+
+<h2>Show results... </h2>
+
+
+{% for result in res %}
+    {% for key, arr in result %}
+        Question: {{ key }} <br>
+        {% for opt,val in arr %}
+            
+            <div style="border-radius:4px;" class="w3-border">
+                <!div class="w3-grey" style="text-align:right;height:24px;width:{{ val*10 }}%">{{ opt }}:{{ val }}</div>
+                <div class="w3-grey" style="text-align:right;height:24px;width:10%">{{ opt }}:{{ val }}</div>
+            </div>
+            
+
+        {% endfor %}
+
+    {% endfor %}
+    <br>
+{% endfor %}
+
+{% endblock %}
