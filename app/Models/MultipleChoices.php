@@ -12,18 +12,20 @@
         
         protected $c;
         protected $locationAPI;
+        protected $jotformAPI;
 
         public function __construct(ContainerInterface $c){
             $this->c = $c;
             $this->locationAPI = new IPInfoDB("23cab5e8de616ed75dd2226da0ffa76aa9b1fcf8a7100d6c777ac0d6a875da01");
+            $this->jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
         }
 
         public function radarCompare($request,$response,$args){
             $this->displayErrors();
             
-            $jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
+            //$jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
             
-            $forms = $jotformAPI->getForms();
+            $forms = $this->jotformAPI->getForms();
             $form = $forms[1];
             $formName = $form['title'];
 
@@ -33,17 +35,17 @@
             $toDate = $request->getParam("toDate");
             $country = "";
             
-            $allData = $this->applyFilters($jotformAPI,$form,$qid,$fromDate,$toDate,$country);
+            $allData = $this->applyFilters($form,$qid,$fromDate,$toDate,$country);
 
             $firstPeriodFromDate = $request->getParam("firstPeriodFromDate");
             $firstPeriodToDate = $request->getParam("firstPeriodToDate");
 
-            $firstPeriodData = $this->applyFilters($jotformAPI,$form,$qid,$firstPeriodFromDate,$firstPeriodToDate,$country);
+            $firstPeriodData = $this->applyFilters($form,$qid,$firstPeriodFromDate,$firstPeriodToDate,$country);
 
             $secondPeriodFromDate = $request->getParam("secondPeriodFromDate");
             $secondPeriodToDate = $request->getParam("secondPeriodToDate");
 
-            $secondPeriodData = $this->applyFilters($jotformAPI,$form,$qid,$secondPeriodFromDate,$secondPeriodToDate,$country);
+            $secondPeriodData = $this->applyFilters($form,$qid,$secondPeriodFromDate,$secondPeriodToDate,$country);
 
             $compareData = array($firstPeriodData,$secondPeriodData);
             
@@ -56,9 +58,9 @@
             
             $this->displayErrors();
 
-            $jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
+            //$jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
             
-            $forms = $jotformAPI->getForms();
+            $forms = $this->jotformAPI->getForms();
             $form = $forms[1];
             $formName = $form['title'];
 
@@ -68,18 +70,18 @@
             $toDate = $request->getParam("toDate");
             $country = $request->getParam("country");
             
-            $allData = $this->applyFilters($jotformAPI,$form,$qid,$fromDate,$toDate,$country);
+            $allData = $this->applyFilters($form,$qid,$fromDate,$toDate,$country);
 
             $radar = false;
 
             return $this->c->view->render($response,"attribute_page.twig",compact("allData","radar"));
         }
 
-        public function applyFilters($jotformAPI,$form,$qid,$fromDate,$toDate,$country){
+        public function applyFilters($form,$qid,$fromDate,$toDate,$country){
             
-            $question = $jotformAPI->getFormQuestion($form["id"],$qid);
+            $question = $this->jotformAPI->getFormQuestion($form["id"],$qid);
 
-            $submissions = $jotformAPI->getFormSubmissions($form["id"]);
+            $submissions = $this->jotformAPI->getFormSubmissions($form["id"]);
            
             $validSubmissions = array();
 
@@ -286,12 +288,12 @@
         public function index($request,$response,$args){
             $this->displayErrors();
             
-            $jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
-            $forms = $jotformAPI->getForms();
+            //$jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
+            $forms = $this->jotformAPI->getForms();
             $form = $forms[1];
             $formName = $form['title'];
 
-            $res = $this->showAll($jotformAPI,$form,$request);
+            $res = $this->showAll($form,$request);
             
             return $this->c->view->render($response,'display.twig',compact('res','formName'));
         }
@@ -299,34 +301,34 @@
         public function detailedIndex($request,$response,$args){
             $this->displayErrors();
             
-            $jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
-            $forms = $jotformAPI->getForms();
+            //$jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
+            $forms = $this->jotformAPI->getForms();
             $form = $forms[1];
             $formName = $form['title'];
 
-            $res = $this->showAll($jotformAPI,$form,$request);
+            $res = $this->showAll($form,$request);
             $month = date('m');
             $year = date('y');
             
-            $resArr = $this->getMonthStats($jotformAPI,$form,$month,$year);
+            $resArr = $this->getMonthStats($form,$month,$year);
 
             return $this->c->view->render($response,'detailed_view.twig',compact('res','formName','month','resArr'));
         }
 
-        public function getMonthStats($jotformAPI,$form,$month,$year){
+        public function getMonthStats($form,$month,$year){
             $resArr = array();
             
-            $questionIDs = $this->detectMultipleChoices($jotformAPI,$form);
+            $questionIDs = $this->detectMultipleChoices($form);
 
             $monthArr = array();
             for($i=0;$i<12;$i++){
                 $monthArr[$i] = ($month+$i)%12+1;
             }
             
-            $submissions = $jotformAPI->getFormSubmissions($form["id"]);
+            $submissions = $this->jotformAPI->getFormSubmissions($form["id"]);
 
             foreach($questionIDs as $qid){
-                $question = $jotformAPI->getFormQuestion($form["id"],$qid);
+                $question = $this->jotformAPI->getFormQuestion($form["id"],$qid);
                 
                 $optionsStr = $question["options"];
                 $options = $this->giveOptionsArray($optionsStr);
@@ -378,17 +380,17 @@
         }
     
     
-        public function multipleOptionsStatistic($jotformAPI,$form,$questionNum,$request){
+        public function multipleOptionsStatistic($form,$questionNum,$request){
             
             $specialize = $request->getParam('specialize');
             if($specialize == NULL){
                 $specialize = "notassigned";
             }
 
-            $submissions = $jotformAPI->getFormSubmissions($form["id"]);
+            $submissions = $this->jotformAPI->getFormSubmissions($form["id"]);
             $submissionCount = sizeof($submissions);
             
-            $questions = $jotformAPI->getFormQuestions($form["id"]);
+            $questions = $this->jotformAPI->getFormQuestions($form["id"]);
     
             $question = $questions[$questionNum];
             $options = $question["options"];
@@ -542,9 +544,9 @@
               
         }
     
-        public function detectMultipleChoices($jotformAPI,$form){
+        public function detectMultipleChoices($form){
             
-            $questions = $jotformAPI->getFormQuestions($form["id"]);
+            $questions = $this->jotformAPI->getFormQuestions($form["id"]);
             
             $qidArray = array();
             
@@ -556,11 +558,11 @@
             return $qidArray;
         }
     
-        public function showAll($jotformAPI,$form,$request){
-            $mcQuestions = $this->detectMultipleChoices($jotformAPI,$form);
+        public function showAll($form,$request){
+            $mcQuestions = $this->detectMultipleChoices($form);
             $allResults = array();
             foreach($mcQuestions as $m){
-                array_push($allResults,$this->multipleOptionsStatistic($jotformAPI,$form,$m,$request));
+                array_push($allResults,$this->multipleOptionsStatistic($form,$m,$request));
             }
             return $allResults;
         }
