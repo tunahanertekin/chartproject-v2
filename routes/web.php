@@ -42,4 +42,3 @@ $app->group('/multiple-choices',function(){
 
 $app->get('/example',ChartController::class.":index");
 
-$app->get('/support',ChartController::class.":support");

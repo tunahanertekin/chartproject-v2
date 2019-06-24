@@ -13,8 +13,4 @@ class ChartController extends Controller{
         return $this->c->view->render($response,"example.twig");
     }
 
-    public function support($request,$response,$args){
-        return $this->c->view->render($response,"support.twig");
-    }       
-
 }

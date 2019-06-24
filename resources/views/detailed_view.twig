@@ -26,7 +26,12 @@
 
 <form style="text-align:center;" method="get" action="/public/multiple-choices/detailed">
 
-    <button class="button" name="detailedView" value="detailedView">get more detailed info</button>
+    <select name="statType">
+      <option value="monthly">See Monthly Stats</option>
+      <option value="daily">See Daily Stats</option>
+    </select>
+    <br><br>
+    <button class="button" name="seeStats">Choose</button>
 
 </form>
 
@@ -37,25 +42,46 @@
 
 
 {% for key,value in resArr %}
-  
-  <script>
-    var monthlyChoosed=[];
-  </script>
+  {% if month %}
+          
+          <script>
+            var monthlyChoosed=[];
+          </script>
 
-  {% for monKey,monVal in value %}
-    
-    <script>
-      var monvaljson = '{{ monVal|json_encode()|raw }}';
-      monVal = JSON.parse(monvaljson);
+          {% for monKey,monVal in value %}
+            
+            <script>
+              var monvaljson = '{{ monVal|json_encode()|raw }}';
+              monVal = JSON.parse(monvaljson);
 
-      for(var key in monVal){
-        
-        monthlyChoosed.push(monVal[key]);
-        
-      }
-    </script>
+              for(var key in monVal){
+                monthlyChoosed.push(monVal[key]);
+                
+              }
+            </script>
     
-  {% endfor %}
+          {% endfor %}
+  {% elseif dayArr %}
+          
+          <script>
+            var dailyChoosed=[];
+          </script>
+
+          {% for dayKey, dayVal in value %}
+            <script>
+              var dayvaljson = '{{ dayVal|json_encode()|raw }}';
+              dayVal = JSON.parse(dayvaljson);
+
+              var dayKey = '{{ dayKey }}';
+              
+
+              for(var key in dayVal){
+                dailyChoosed.push(dayVal[key]);
+
+              }
+            </script>
+          {% endfor %}
+  {% endif %}
   <br><br>
 
   
@@ -68,53 +94,107 @@
       <div>
           
               <canvas style="display:inline;text-align:center;" id="line-chart{{ key }}" width="800" height="450"></canvas>
+                  {% if month %}
+                      <script>
+                          //var datasetArr;
+                          var months = [ "January", "February", "March", "April", "May", "June", 
+                          "July", "August", "September", "October", "November", "December" ];
+                          var month = parseInt('{{ month }}');
 
-              <script>
-                  //var datasetArr;
-                  var months = [ "January", "February", "March", "April", "May", "June", 
-                  "July", "August", "September", "October", "November", "December" ];
-                  var month = parseInt('{{ month }}');
+                          monthArr = [];
+                          for(var i=0;i<12;i++){
+                            monthArr[i] = months[(month+i)%12];
+                            
+                          }
+                          
+                          var optNum = monthlyChoosed.length/12;
+                          
+                          var optionArr = [];
+                          for(var i=0;i<optNum;i++){
+                            optionArr[i]=[];
+                          }
+                          
+                          for(var i=0;i<monthlyChoosed.length;i++){
+                            optionArr[i%optNum].push(monthlyChoosed[i]);
+                          }
 
-                  monthArr = [];
-                  for(var i=0;i<12;i++){
-                    monthArr[i] = months[(month+i)%12];
-                    
-                  }
+                          var dataset=[];
+                          
+                      </script>
+                  {% elseif dayArr %}
+                      <script>
+
+                          var daysjson = '{{ dayArr|json_encode()|raw }}';
+                          var dayArr = JSON.parse(daysjson);
+
+                          var optNum = dailyChoosed.length/30;
+
+                          var optionArr = [];
+                          for(var i=0;i<optNum;i++){
+                            optionArr[i]=[];
+                          }
+                          
+                          for(var i=0;i<dailyChoosed.length;i++){
+                            optionArr[i%optNum].push(dailyChoosed[i]);
+                          }
+
+                          var dataset=[];
+
+                          var allOptions=[];
+                          var cnt =0;
+                          for(var xkey in dayVal){
+                            allOptions.push(xkey);
+                            if(cnt == optNum-1){
+                              break;
+                            }
+                          }
+                      
+                      </script>
+                  {% endif %}
+
+                  {% if month %}
+                      {% for monKey,monVal in value %}
+
+                          <script>
+                              var i=0;
+                              var allOptions=[];
+                              
+                              for(var key in monVal){
+                                  allOptions.push(key);
+                                  
+                                  i++;
+                                  if(i==optNum)
+                                      break;
+                              }
+                        
+                          </script>
+
+                      {% endfor %}
+                  {% elseif dayArr %}
+                         <script>
+                          //do nothing... convention
+                         </script>
+                  {% endif %}
                   
-                  var optNum = monthlyChoosed.length/12;
-                  
-                  var optionArr = [];
-                  for(var i=0;i<optNum;i++){
-                    optionArr[i]=[];
-                  }
-                  
-                  for(var i=0;i<monthlyChoosed.length;i++){
-                    optionArr[i%optNum].push(monthlyChoosed[i]);
-                  }
+                  {% if month %}
+                      <script>
+                        var labelsArr = [];
+                        labelsArr = monthArr;
+                      </script>
+                  {% elseif dayArr %}
+                      <script>
+                        var labelsArr = [];
+                        for(var key in dayArr){
+                          labelsArr.push(dayArr[key]);
+                        }
+                        labelsArr = labelsArr.reverse();
+                      </script>
+                  {% endif %}
 
-                  var dataset=[];
-                  
-              </script>
-
-                  {% for monKey,monVal in value %}
-
-                    <script>
-                      var i=0;
-                      var allOptions=[];
-                      for(var key in monVal){
-                        allOptions.push(key);
-                        i++;
-                        if(i==optNum)
-                          break;
-                      }
-                    
-                    </script>
-
-
-                  {% endfor %}
-                  
                   
                   <script>
+
+                   
 
                     for(var i=0;i<optNum;i++){
                       dataset[i] = { 
@@ -124,13 +204,14 @@
                         fill: false
                       };
                     }
-                    
-      
 
+                    ;
+                    
+             
                     new Chart(document.getElementById("line-chart{{ key }}"), {
                       type: 'line',
                       data: {
-                        labels: monthArr,
+                        labels: labelsArr,
                         datasets: dataset
                       },
                       options: {

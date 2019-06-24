@@ -23,8 +23,6 @@
         public function radarCompare($request,$response,$args){
             $this->displayErrors();
             
-            //$jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
-            
             $forms = $this->jotformAPI->getForms();
             $form = $forms[1];
             $formName = $form['title'];
@@ -57,8 +55,6 @@
         public function seeAllAttributes($request,$response,$args){
             
             $this->displayErrors();
-
-            //$jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
             
             $forms = $this->jotformAPI->getForms();
             $form = $forms[1];
@@ -135,18 +131,6 @@
                 //get all ip addresses
                 array_push($ipArr,$s["ip"]);
 
-                /*
-                if($countryFilter){
-                    if($country == $this->locationAPI->getCountry($s["ip"])["countryName"]){
-                        $push3 = true;
-                    }
-                }
-                else{
-                    $push3 = true;
-                }
-                */
-
-
                 if($dateFilter){
                     
                     $dateFilterArr = array(date('d M, Y',strtotime($fromDate)),date('d M, Y',strtotime($toDate)));
@@ -217,29 +201,10 @@
                     
                 }
             }
-                        
-            
-            $oldIP = "0.0.0.0";
 
             foreach($validSubmissions as $s){
                 if(array_key_exists("answer",$s["answers"][$qid])){
                     $submittedChoices = $s["answers"][$qid]["answer"];
-                    
-                    /*
-                    $ip = $s["ip"];
-                    if($oldIP != $ip)
-                        $country = $locationAPI->getCountry($ip)["countryName"];
-                    $oldIP = $ip;
-                    */
-
-                    /*
-                    if(array_key_exists($country,$countryArr)){
-                        $countryArr[$country]++;
-                    }
-                    else{
-                        $countryArr[$country] = 1;
-                    }
-                    */
         
                     foreach($submittedChoices as $sub){
                         if($optionFilter){
@@ -264,12 +229,6 @@
             if(empty($dateFilterArr)){
                 $dateFilterArr = array();
             }
-            
-            /*
-            echo "<pre>";
-            var_dump($countryArr);
-            die();
-            */
 
             return array(
                 array($qid,$question["name"]),
@@ -288,7 +247,6 @@
         public function index($request,$response,$args){
             $this->displayErrors();
             
-            //$jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
             $forms = $this->jotformAPI->getForms();
             $form = $forms[1];
             $formName = $form['title'];
@@ -301,7 +259,6 @@
         public function detailedIndex($request,$response,$args){
             $this->displayErrors();
             
-            //$jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
             $forms = $this->jotformAPI->getForms();
             $form = $forms[1];
             $formName = $form['title'];
@@ -309,10 +266,24 @@
             $res = $this->showAll($form,$request);
             $month = date('m');
             $year = date('y');
-            
-            $resArr = $this->getMonthStats($form,$month,$year);
+            $day = date('d');
 
-            return $this->c->view->render($response,'detailed_view.twig',compact('res','formName','month','resArr'));
+            $statType = $request->getParam("statType");
+
+            if($statType == NULL || $statType == "monthly"){
+                $resArr = $this->getMonthStats($form,$month,$year);
+                $dayArr = "";
+            }
+            else if($statType == "daily"){
+                $resArr = $this->getDayStats($form,$month,$year);
+                $month = "";//convention
+                $dayArr = array();
+                for($i=29;$i>=0;$i--){
+                    $dayArr[$i] = date("d M, y",strtotime("-$i days"));
+                }
+            }
+            
+            return $this->c->view->render($response,'detailed_view.twig',compact('formName','month','dayArr','resArr'));
         }
 
         public function getMonthStats($form,$month,$year){
@@ -360,9 +331,67 @@
                 }
             
             }
-
+        
         return $resArr;            
 
+        }
+
+        public function getDayStats($form,$month,$year){
+            ini_set('display_errors', 1);
+            ini_set('display_startup_errors', 1);
+            error_reporting(E_ALL);
+
+            $resArr = array();
+            
+            $questionIDs = $this->detectMultipleChoices($form);
+
+            $dayArr = array();
+            for($i=29;$i>=0;$i--){
+                
+                array_push($dayArr,date("d M, y",strtotime("-$i days")));
+            }
+
+                       
+
+            $submissions = $this->jotformAPI->getFormSubmissions($form["id"]);
+
+            foreach($questionIDs as $qid){
+                $question = $this->jotformAPI->getFormQuestion($form["id"],$qid);
+                
+                $optionsStr = $question["options"];
+                $options = $this->giveOptionsArray($optionsStr);
+                
+                foreach($dayArr as $k=>$day){
+                    
+                    foreach($options as $o){
+                        $resArr[$question["name"]][$day][$o] = 0;
+                        
+                        foreach($submissions as $s){
+                            $d = (int)date("d M, y",strtotime($s["created_at"]));
+                            //$m = (int)date("m",strtotime($s["created_at"]));
+                            //$y = (int)date("y",strtotime($s["created_at"]));
+                            
+                            if($day == $d){
+                                
+                                if(array_key_exists("answer",$s["answers"][$qid])){
+                                    
+                                    if(in_array($o,$s["answers"][$qid]["answer"]))
+                                        $resArr[$question["name"]][$day][$o]++;
+                                
+                                }
+                            
+                            }
+                        
+                        }
+                   
+                    }
+                
+                }
+            
+            }
+            
+            
+            return $resArr;        
         }
 
         public function giveOptionsArray($str){
@@ -412,6 +441,7 @@
                     
                 }
                 else{
+                    
                     //Seperates into timestamps
                     $subDate = $submissions[$i]['created_at'];
                     $currentDate = strtotime('+0 days');
@@ -536,7 +566,6 @@
                 }
             }
     
-            //$questionName = $question["name"];
             $str = $question["qid"].",".$question["name"];
             $finalData[$str]=$assOptionsArr;
     
