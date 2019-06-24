@@ -19,12 +19,20 @@
             $this->locationAPI = new IPInfoDB("23cab5e8de616ed75dd2226da0ffa76aa9b1fcf8a7100d6c777ac0d6a875da01");
             $this->jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
         }
-
+        
         public function radarCompare($request,$response,$args){
             $this->displayErrors();
             
+            
             $forms = $this->jotformAPI->getForms();
-            $form = $forms[1];
+            
+            foreach($forms as $f){
+                if($f["title"]=="Test"){
+                    $form = $f;
+                }
+            }
+            
+            //$form = $forms[1];
             $formName = $form['title'];
 
             $qid = (int)$args["qid"];
@@ -57,7 +65,11 @@
             $this->displayErrors();
             
             $forms = $this->jotformAPI->getForms();
-            $form = $forms[1];
+            foreach($forms as $f){
+                if($f["title"]=="Test"){
+                    $form = $f;
+                }
+            }
             $formName = $form['title'];
 
             $qid = (int)$args["qid"];
@@ -248,8 +260,15 @@
             $this->displayErrors();
             
             $forms = $this->jotformAPI->getForms();
-            $form = $forms[1];
+            foreach($forms as $f){
+                if($f["title"]=="Test"){
+                    $form = $f;
+                }
+            }
+            //$form = $forms[2];
             $formName = $form['title'];
+
+            
 
             $res = $this->showAll($form,$request);
             
@@ -260,7 +279,11 @@
             $this->displayErrors();
             
             $forms = $this->jotformAPI->getForms();
-            $form = $forms[1];
+            foreach($forms as $f){
+                if($f["title"]=="Test"){
+                    $form = $f;
+                }
+            }
             $formName = $form['title'];
 
             $res = $this->showAll($form,$request);
@@ -417,6 +440,8 @@
             }
 
             $submissions = $this->jotformAPI->getFormSubmissions($form["id"]);
+
+
             $submissionCount = sizeof($submissions);
             
             $questions = $this->jotformAPI->getFormQuestions($form["id"]);
@@ -566,7 +591,7 @@
                 }
             }
     
-            $str = $question["qid"].",".$question["name"];
+            $str = $question["qid"].",".$question["text"];
             $finalData[$str]=$assOptionsArr;
     
             return $finalData;

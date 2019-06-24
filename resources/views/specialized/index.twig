@@ -1,0 +1,18 @@
+{% extends "layouts/navbar.twig" %}
+
+{% block content %}
+
+<form action="/public/multiple-choices/specialized" method="POST">
+    <br><br>
+    <select name="mcquestion" >
+
+        {% for id,question in multipleChoiceQuestions %}
+            <option value="question-{{id}}"> {{ question }} </option>
+        {% endfor %}
+
+    </select>
+    <br><br>
+    <button class="button" name="pick">Pick</button>
+</form>
+
+{% endblock %}

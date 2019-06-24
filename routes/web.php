@@ -4,6 +4,7 @@
 use App\Middleware\DefaultMiddleware;
 
 use App\Models\MultipleChoices;
+use App\Models\SpecializedData;
 
 use App\Middleware\RedirectIfUnauthenticated;
 use Interop\Container\ContainerInterface;
@@ -36,6 +37,13 @@ $app->group('/multiple-choices',function(){
             $this->get('/radar',MultipleChoices::class.":radarCompare");
             $this->post('/radar',MultipleChoices::class.":radarCompare");
         });
+    });
+
+    $this->group('/specialized',function(){
+        $this->get('',SpecializedData::class.":index");
+        $this->post('',SpecializedData::class.":otherQuestions");
+
+        $this->post('/{qid}',SpecializedData::class.":dynamicStats");
     });
     
 });
