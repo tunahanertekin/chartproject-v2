@@ -1,0 +1,45 @@
+{% extends 'layouts/navbar.twig' %}
+
+
+{% block content %}
+
+    <div class="row" style="height:25px;">
+
+    </div>
+
+    <div class="row" style="height: 700px;">
+
+        <div style="width: 4%;">
+
+        </div>
+
+        <div class="column" style="width:92%;">
+
+            <form method="POST" action="/public/jotcharts/index">
+                <br>
+                <select name="question">
+
+                    {% for info in infoArr %}
+                        <option value="{{info[0]}}"> {{ info[1] }} </option>
+                    {% endfor %}
+
+                </select>
+
+                <br><br><br>
+                <button class="button">Select</button>
+            
+            </form>
+
+        </div>
+
+        <div style="width: 4%">
+
+        </div>
+
+    </div>
+    
+
+
+
+
+{% endblock %}

@@ -39,6 +39,8 @@
 
     .dataTable tr:nth-child(even){background-color: #f2f2f2;}
 
+    .dataTable tr:nth-child(odd){background-color: grey}
+
     .dataTable tr:hover {background-color: #ddd;}
 
     .dataTable th {
@@ -50,39 +52,163 @@
     }
 </style>
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+        * {
+        box-sizing: border-box;
+        }
+
+        /* Create three equal columns that floats next to each other */
+        .column {
+        float: left;
+        width: 33.33%;
+        padding: 10px;
+        height: 300px; /* Should be removed. Only for demonstration */
+        background-image: url("https://www.jotform.com/myforms3/images/themes/tile-black.jpg");
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        border-radius: 4px;
+        }
+
+        .orangecolumn {
+        float: left;
+        width: 33.33%;
+        padding: 10px;
+        height: 300px; /* Should be removed. Only for demonstration */
+        background-image: url("https://www.jotform.com/myforms3/images/themes/tile-orange.jpg");
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        border-radius: 4px;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+        content: "";
+        display: table;
+        clear: both;
+        }
+
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .sidenav {
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 100px;
+    left: 0px;
+    background-image: url("https://www.jotform.com/myforms3/images/themes/tile-black.jpg");
+    overflow-x: hidden;
+    padding: 8px 0;
+    color: #ddd;
+    height: 100%;
+    border-radius: 15px;
+    }
+
+    .sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #2196F3;
+    display: block;
+    }
+
+    .sidenav a:hover {
+    color: #064579;
+    }
+
+    .main {
+    margin-left: 140px; /* Same width as the sidebar + left position in px */
+    font-size: 28px; /* Increased text to enable scrolling */
+    padding: 0px 10px;
+    }
+
+    @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+    }
+</style>
+
+<style>
+
+    .firstpage{
+        background-image: url("https://www.jotform.com/myforms3/images/themes/tile-orange.jpg") ;
+    }
 
 
+</style>
 
+<style>
+        * {
+        box-sizing: border-box;
+        }
 
+        /* Create three equal columns that floats next to each other */
+        .defcolumn {
+        float: left;
+        padding: 10px;
+        background-image: url("https://www.jotform.com/myforms3/images/themes/tile-black.jpg");
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        border-radius: 4px;
+        }
 
+        .defcolumnaux {
+        float: left;
+        padding: 10px;
+        background-image: url("https://www.jotform.com/myforms3/images/themes/tile-orange.jpg");
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        border-radius: 4px;
+        }
 
+        /* Clear floats after the columns */
+        .row:after {
+        content: "";
+        display: table;
+        clear: both;
+        }
 
-
-
-
+</style>
 
 
 
 <style>
-
-#myProgress {
-
-width: 100%;
-background-color: lightcoral;
-border-radius:10px;
-}
-
-#myBar {
-width: 10%;
-height: 30px;
-background-color: lightgreen;
-text-align: center;
-line-height: 30px;
-color: white;
-border-radius:10px;
-}
+    .questionHeader{
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        color:#f38d30;
+        font-style: italic;
+    }
 
 </style>
+
+<style>
+    .formType{
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        color:azure;
+    }
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -188,10 +314,17 @@ animation: AnimationNav 30s ease infinite;
 
 
 
+<style>
+    .mybody{
+        background-image: url("https://www.jotform.com/myforms3/images/themes/tile-red.jpg");
+    }
+
+</style>
 
 
+<body class="mybody">
+    {% block style %}  {% endblock %}
+</body>
 
 
-
-{% block style %}  {% endblock %}
 

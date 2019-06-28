@@ -16,7 +16,7 @@
 
         public function __construct(ContainerInterface $c){
             $this->c = $c;
-            $this->locationAPI = new IPInfoDB("23cab5e8de616ed75dd2226da0ffa76aa9b1fcf8a7100d6c777ac0d6a875da01");
+            //$this->locationAPI = new IPInfoDB("23cab5e8de616ed75dd2226da0ffa76aa9b1fcf8a7100d6c777ac0d6a875da01");
             $this->jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
         }
         
@@ -27,7 +27,7 @@
             $forms = $this->jotformAPI->getForms();
             
             foreach($forms as $f){
-                if($f["title"]=="Test"){
+                if($f["title"]=="Test2"){
                     $form = $f;
                 }
             }
@@ -66,7 +66,7 @@
             
             $forms = $this->jotformAPI->getForms();
             foreach($forms as $f){
-                if($f["title"]=="Test"){
+                if($f["title"]=="Test2"){
                     $form = $f;
                 }
             }
@@ -188,10 +188,6 @@
             $ipArr = array_unique($ipArr);
             $countryArr = array();
             
-            foreach($ipArr as $ip){
-                array_push($countryArr,$this->locationAPI->getCountry($ip)["countryName"]);
-            }
-
             
             $data = array();
 
@@ -261,7 +257,7 @@
             
             $forms = $this->jotformAPI->getForms();
             foreach($forms as $f){
-                if($f["title"]=="Test"){
+                if($f["title"]=="Test2"){
                     $form = $f;
                 }
             }
@@ -280,7 +276,7 @@
             
             $forms = $this->jotformAPI->getForms();
             foreach($forms as $f){
-                if($f["title"]=="Test"){
+                if($f["title"]=="Test2"){
                     $form = $f;
                 }
             }
@@ -330,7 +326,7 @@
                 foreach($monthArr as $k=>$m){
                     
                     foreach($options as $o){
-                        $resArr[$question["name"]][$m][$o] = 0;
+                        $resArr[$question["text"]][$m][$o] = 0;
                         
                         foreach($submissions as $s){
                             $month = (int)date("m",strtotime($s["created_at"]));
@@ -341,7 +337,7 @@
                                 if(array_key_exists("answer",$s["answers"][$qid])){
                                     
                                     if(in_array($o,$s["answers"][$qid]["answer"]))
-                                        $resArr[$question["name"]][$m][$o]++;
+                                        $resArr[$question["text"]][$m][$o]++;
                                 
                                 }
                             
@@ -387,7 +383,7 @@
                 foreach($dayArr as $k=>$day){
                     
                     foreach($options as $o){
-                        $resArr[$question["name"]][$day][$o] = 0;
+                        $resArr[$question["text"]][$day][$o] = 0;
                         
                         foreach($submissions as $s){
                             $d = (int)date("d M, y",strtotime($s["created_at"]));
@@ -399,7 +395,7 @@
                                 if(array_key_exists("answer",$s["answers"][$qid])){
                                     
                                     if(in_array($o,$s["answers"][$qid]["answer"]))
-                                        $resArr[$question["name"]][$day][$o]++;
+                                        $resArr[$question["text"]][$day][$o]++;
                                 
                                 }
                             

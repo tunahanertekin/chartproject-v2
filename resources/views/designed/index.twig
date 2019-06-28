@@ -1,0 +1,339 @@
+{% extends 'layouts/navbar.twig' %}
+
+{% block content %}
+
+  <div class="row" style="height:25px;">
+
+
+  </div>
+
+  <div class="row">
+    
+    <div style="width: 4%;">
+
+
+    </div>
+
+
+    <div class="column" style="background-color:#aaa;color:#f38d30;height:700px;width:30%;">
+      <br><br>
+      <div>
+        <h2 class="questionHeader">
+          {{ question[1] }}
+        </h2>
+      </div>
+      
+      <div id="chartPlace">
+      
+      </div>
+      <br>
+
+      <script>
+        var subarrjson = '{{ submissionArr|json_encode()|raw }}';
+        var submissionArr = JSON.parse(subarrjson);
+
+        var optionFilteredSubmissionArr = [];
+        var dateFilteredSubmissionArr = [];
+        var givenArr = [];
+
+        var qjson = '{{ question|json_encode()|raw }}';
+        var question =  JSON.parse(qjson);
+
+        var qid = question[0];
+        var questionName = [1];
+        var options = question[2];
+
+        //console.log(options);
+        var optionFilterArr = [];
+        var filteredOptionsArr = [];
+        
+        
+        
+
+        function applyOptionFilter() {
+        
+          var x = document.getElementsByName("check");
+          var i;
+          optionFilterArr = [];
+          filteredOptionsArr = [];
+          for (i = 0; i < x.length; i++) {
+            if (x[i].type == "checkbox") {
+              if(x[i].checked == true){
+                optionFilterArr.push(x[i].id);
+              }
+              else{
+                filteredOptionsArr.push(x[i].id);
+              }
+            }
+          }
+          options = filteredOptionsArr;
+
+          applyOptionFilterSub();
+        }
+
+        function applyOptionFilterSub(){
+
+          var push = true;
+          for(var key in submissionArr){
+            push = true;
+            for(var key2 in optionFilterArr){
+              if(submissionArr[key][1] != null){
+                if(!submissionArr[key][1].includes(optionFilterArr[key2])){
+                  push = false;
+                }
+              }
+              else{
+                push = false;
+              }
+              
+            }
+            if(push)
+              optionFilteredSubmissionArr.push(submissionArr[key]);
+          }
+          //submissionArr = optionFilteredSubmissionArr;
+        }
+
+        function assignAndDraw(){
+          
+          mergeFilters();
+
+          var associativeStat = [];
+          for(var key in options){
+            associativeStat[options[key]]=0;
+          }
+          
+          for(var key in givenArr){
+            var currentAnswer = givenArr[key][1];
+
+            for(var key2 in currentAnswer){
+              associativeStat[currentAnswer[key2]]++;
+            }
+          }
+
+          var keyarr = [];
+          var valarr = [];
+
+          for(var key in associativeStat){
+            keyarr.push(key);
+            valarr.push(associativeStat[key]);
+          }
+          document.getElementById("chartPlace").innerHTML="<canvas id=\"myPieChart\" width=\"400\" height=\"400\"></canvas>";
+          drawChart(keyarr,valarr);
+        }
+
+        function drawChart(keyarr,valarr){
+          var ctxPie = document.getElementById("myPieChart").getContext('2d');
+                        var myPieChart = new Chart(ctxPie, {
+                            type: 'pie',
+                            data: {
+                                labels: keyarr,
+                                datasets: [{
+                                backgroundColor: [
+                                    "rgb(255, 99, 132)",
+                                    "rgb(75, 192, 192)",
+                                    "rgb(54, 162, 235)",
+                                    "rgb(153, 102, 255)",
+                                    "rgb(255, 205, 86)",
+                                    "rgb(231,233,237)",
+                                    "rgb(255, 159, 64)"
+                                ],
+                                data: valarr
+                                }]
+                            },
+                            options: {
+                                responsive: false,
+                                        legend: {
+                                            labels: {
+                                                fontColor: 'white'
+                                            }
+                                        }
+                                    }
+                        });
+        }
+
+        function applyDateFilter(){
+
+          var dates = document.getElementsByName("betweendates");
+          var fromDate = dates[0];
+          var toDate = dates[1];
+
+          if(fromDate.value.length != "" && toDate.value.length == ""){
+            var fromDateFormat = new Date(fromDate.value);
+            for(var key in submissionArr){
+              var subDate = new Date(submissionArr[key][0]);
+              if(fromDateFormat<subDate){
+                dateFilteredSubmissionArr.push(submissionArr[key]);
+              }
+              else{
+                continue;
+              }
+            }
+            //submissionArr = dateFilteredSubmissionArr;
+          }
+          else if(fromDate.value.length == "" && toDate.value.length != ""){
+            var toDateFormat = new Date(toDate.value);
+            for(var key in submissionArr){
+              var subDate = new Date(submissionArr[key][0]);
+              if(toDateFormat<subDate){
+                dateFilteredSubmissionArr.push(submissionArr[key]);
+              }
+              else{
+                continue;
+              }
+            }
+            //submissionArr = dateFilteredSubmissionArr;
+          }
+          else if(fromDate.value.length == "" && toDate.value.length != ""){
+            var fromDateFormat = new Date(fromDate.value);
+            var toDateFormat = new Date(toDate.value);
+            for(var key in submissionArr){
+              var subDate = new Date(submissionArr[key][0]);
+              if(fromDateFormat<subDate && subDate<toDateFormat){
+                dateFilteredSubmissionArr.push(submissionArr[key]);
+              }
+              else{
+                continue;
+              }
+            }
+            //submissionArr = dateFilteredSubmissionArr;
+          }
+          else{
+            dateFilteredSubmissionArr = submissionArr;
+          }
+        }
+
+
+        function mergeFilters(){
+          givenArr = [];
+          optionFilteredSubmissionArr = [];
+          dateFilteredSubmissionArr = [];
+          applyDateFilter();
+          applyOptionFilter();
+
+         
+          for(var key1 in optionFilteredSubmissionArr){
+            for(var key2 in dateFilteredSubmissionArr){
+              if(optionFilteredSubmissionArr[key1][2] == dateFilteredSubmissionArr[key2][2])
+                givenArr.push(optionFilteredSubmissionArr[key1]);
+            }
+          }
+        }
+
+        
+      
+      </script>
+
+    </div>
+
+
+    <div style="width: 1%;">
+
+
+    </div>
+
+
+
+    <div class="orangecolumn" style="background-color:#bbb;height:700px;width:30%;">
+      <br><br>
+      
+      <h2 class="questionHeader" style="color:black;">Filters</h2>
+
+      <br><br>
+      <div class="formType">
+        {% set options = question[2] %}
+        <br>
+
+        <div style="font-style: italic;">
+          Option scope:
+        </div>
+
+        {% for opt in options %}
+            <input type="checkbox" onclick="assignAndDraw()" name="check" id="{{opt}}"> {{ opt }} <br>
+        {% endfor %}
+
+        <br>
+
+          <div style="font-style: italic;">
+            Between Dates: 
+          </div>
+          <input name="betweendates" type="date" onchange="assignAndDraw()">
+          - <input name="betweendates" type="date" onchange="assignAndDraw()">
+
+
+        <br><br>
+        <button class="button" onclick="assignAndDraw()">Draw Chart</button>
+        </div>
+    </div>
+    
+    <div style="width: 1%;">
+
+
+    </div>
+
+    <div class="column" style="background-color:#ccc;color:blue;height:700px;width:30%;">
+      Explanation
+    </div>
+
+    <div style="width: 4%;">
+
+    </div>
+  </div>
+
+<div class="row" style="height: 25px;">
+
+
+</div>
+
+
+  <div class="row">
+    
+    <div style="width: 4%;">
+
+
+    </div>
+
+
+    <div class="orangecolumn" style="background-color:#aaa;color:#f38d30;height:700px;width:30%;">
+      First Date Period: <br>
+      <input type="date" name="datePeriod1" > - <input type="date" name="datePeriod1"> <br>
+      Second Date Period: <br>
+      <input type="date" name="datePeriod2" > - <input type="date" name="datePeriod2">
+    
+    
+    
+    </div>
+
+
+    <div style="width: 1%;">
+
+
+    </div>
+
+
+
+    <div class="column" style="background-color:#bbb;height:700px;width:30%;">
+      <script>
+        
+        
+
+
+      </script>
+    </div>
+    
+    <div style="width: 1%;">
+
+
+    </div>
+
+    <div class="orangecolumn" style="background-color:#ccc;color:blue;height:700px;width:30%;">
+      Explanation
+    </div>
+
+    <div style="width: 4%;">
+
+    </div>
+  </div>
+
+
+
+{% endblock %}

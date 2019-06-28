@@ -5,347 +5,377 @@
     {% set questionInfo = compactData[1] %}
     {% set otherQuestions = compactData[2] %}
     {% set dataForDifferentTypes = compactData[3] %}
-
-    {% for key,val in questionInfo %}
-        {% set questionName = key %}
-
-        <div style="position:absolute;top:150px;left:100px;">
-            <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                {{questionName}} </h2>
-        </div>
-
-        <form style="position:absolute;right:580px;top:200px;" action="/public/multiple-choices/specialized/{{qid}}" method="POST">
-
-            <div style="font-style: italic">
-                Option scope:
-            </div>
-            {% for opt,count in val %}
-
-                {{opt}} <input type="checkbox" name="check{{opt}}"><br>
-
+    
+    <!
+    red: 'rgb(255, 99, 132)',
+    orange: 'rgb(255, 159, 64)',
+    yellow: 'rgb(255, 205, 86)',
+    green: 'rgb(75, 192, 192)',
+    blue: 'rgb(54, 162, 235)',
+    purple: 'rgb(153, 102, 255)',
+    grey: 'rgb(231,233,237)'
+    >
+    
+    <div class="row">
+        <div class="column" style="height:2000px;border:1px solid #f38d30;">
+                {% for key,val in questionInfo %}
+                    {% set questionName = key %}
+            
+                    <div>
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{questionName}} </h2>
+                    </div>
+                    <canvas id="pieChart" width="400" height="400"></canvas>
+        
+                    <script>
+                        var valjson = '{{ val|json_encode()|raw }}';
+                        var val = JSON.parse(valjson);
+        
+                        var optionsArr = [];
+                        var valueArr = [];
+        
+                        for(var key in val){
+                            optionsArr.push(key);
+                            valueArr.push(val[key]);
+                        }
+                        
+        
+                        var ctx = document.getElementById("pieChart").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: optionsArr,
+                                datasets: [{
+                                backgroundColor: [
+                                    "rgb(255, 99, 132)",
+                                    "rgb(75, 192, 192)",
+                                    "rgb(54, 162, 235)",
+                                    "rgb(153, 102, 255)",
+                                    "rgb(255, 205, 86)",
+                                    "rgb(231,233,237)",
+                                    "rgb(255, 159, 64)"
+                                ],
+                                data: valueArr
+                                }]
+                            },
+                            options: {
+                                responsive: false,
+                                        legend: {
+                                            labels: {
+                                                fontColor: 'white'
+                                            }
+                                        }
+                                    }
+                        });
+                    </script>
             {% endfor %}
-
-            <br><br>
-
-            <div style="font-style: italic">
-                    Date between:
-            </div>
-
-            <input type="date" name="fromDate">-
-            <input type="date" name="toDate">
-
-            <br><br>
-
-            <div style="font-style: italic">
-                    Apply your filters for other question:
-            </div>
-            
-            <select name="otherQuestion">
-                {% for qid,qname in otherQuestions %}
-                    <option value="other{{qid}}"> {{qname}} </option>
-                {% endfor %}
-            </select>
-
-            <br><br>
-
-            <button class="button"> See Dynamic Statistics </button>
-
-        </form>
-
-        <canvas style="position:absolute;left:50px;top:200px;" id="pieChart" width="400" height="400"></canvas>
-
-        <script>
-            var valjson = '{{ val|json_encode()|raw }}';
-            var val = JSON.parse(valjson);
-
-            var optionsArr = [];
-            var valueArr = [];
-
-            for(var key in val){
-                optionsArr.push(key);
-                valueArr.push(val[key]);
-            }
-            
-
-            var ctx = document.getElementById("pieChart").getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: optionsArr,
-                    datasets: [{
-                    backgroundColor: [
-                        "#2ecc71",
-                        "#3498db",
-                        "#95a5a6",
-                        "#9b59b6",
-                        "#f1c40f",
-                        "#e74c3c",
-                        "#34495e"
-                    ],
-                    data: valueArr
-                    }]
-                },
-                options: {
-                    responsive: false
-                }
-            });
-        </script>
-
-    {% endfor %}
-
-    {% if dataForDifferentTypes[0] == "control_textbox" %}
-
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
         </div>
+        <div class="column" style="height:2000px;border:1px solid #f38d30;color:aliceblue;">
+            {% for key,val in questionInfo %}
+        
+                <form action="/public/multiple-choices/specialized/{{qid}}" method="POST">
+        
+                    <div style="font-style: italic">
+                        Option scope:
+                    </div>
+                    {% for opt,count in val %}
+        
+                        {{opt}} <input type="checkbox" name="check{{opt}}"><br>
+        
+                    {% endfor %}
+        
+                    <br><br>
+        
+                    <div style="font-style: italic">
+                            Date between:
+                    </div>
+        
+                    <input type="date" name="fromDate">-
+                    <input type="date" name="toDate">
+        
+                    <br><br>
+        
+                    <div style="font-style: italic">
+                            Apply your filters for other question:
+                    </div>
+                    
+                    <select style="text-align:center;width:300px;" name="otherQuestion">
+                        {% for qid,qname in otherQuestions %}
+                            <option value="other{{qid}}"> {{qname}} </option>
+                        {% endfor %}
+                    </select>
+        
+                    <br><br>
+        
+                    <button class="button"> See Dynamic Statistics </button>
+        
+                </form>
+        
+            {% endfor %}
+        </div>
+        <div class="column" style="height:2000px;border:1px solid #f38d30;">
+                    
 
-        <div style="position:absolute;right:150px;top:200px;">
-            <table class="dataTable" style="text-align:center;">
-                <tr>
-                <th> {{dataForDifferentTypes[1]}} </th>
-                </tr>
-                {% for datum in dataForDifferentTypes[2] %}
+                
+                {% if dataForDifferentTypes[0] == "control_textbox" %}
+
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>
+
+                <div style="display:inline-block;width:400px;">
+                    <table class="dataTable" style="text-align:center;">
+                        <tr>
+                        <th> {{dataForDifferentTypes[1]}} </th>
+                        </tr>
+                        {% for datum in dataForDifferentTypes[2] %}
+                            <tr>
+                                <td> {{ datum }} </td>
+                            </tr>
+                        {% endfor %}
+                    </table> 
+
+                </div>
+                
+            {% elseif dataForDifferentTypes[0] == "control_textarea" %}
+
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>  
+
+                <table class="dataTable" style="display:inline-block;width:400px;text-align:center;">
                     <tr>
-                        <td> {{ datum }} </td>
+                    <th> Answers </th>
                     </tr>
-                {% endfor %}
-            </table> 
+                    {% for datum in dataForDifferentTypes[2] %}
+                        <tr>
+                            <td> {{ datum }} </td>
+                        </tr>
+                    {% endfor %}
+                </table> 
+            {% elseif dataForDifferentTypes[0] == "control_dropdown" %}
+                
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>
 
-        </div>
-        
-    {% elseif dataForDifferentTypes[0] == "control_textarea" %}
+                <table class="dataTable" style="text-align:center;">
+                    <tr>
+                    <th> {{dataForDifferentTypes[1]}} </th>
+                    <th> Times Chosen </th>
+                    </tr>
+                    {% for datum,value in dataForDifferentTypes[2] %}
+                        <tr>
+                            <td> {{ datum }} </td>
+                            <td> {{ value }} </td>
+                        </tr>
+                    {% endfor %}
+                </table> 
+            {% elseif dataForDifferentTypes[0] == "control_radio" %}
+            
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>
+                <canvas id="myChartDoughnut" width="400" height="400"></canvas>
 
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
-        </div>
+                <script>
 
-        <table class="dataTable" style="text-align:center;position:absolute;right:150px;top:200px;">
-            <tr>
-            <th> {{dataForDifferentTypes[1]}} </th>
-            </tr>
-            {% for datum in dataForDifferentTypes[2] %}
-                <tr>
-                    <td> {{ datum }} </td>
-                </tr>
-            {% endfor %}
-        </table> 
-    {% elseif dataForDifferentTypes[0] == "control_dropdown" %}
-        
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
-        </div>
+                    var datajson = '{{ dataForDifferentTypes[2]|json_encode()|raw }}';
+                    var data = JSON.parse(datajson);
 
-        <table class="dataTable" style="text-align:center;position:absolute;right:150px;top:200px;">
-            <tr>
-            <th> {{dataForDifferentTypes[1]}} </th>
-            <th> Times Chosen </th>
-            </tr>
-            {% for datum,value in dataForDifferentTypes[2] %}
-                <tr>
-                    <td> {{ datum }} </td>
-                    <td> {{ value }} </td>
-                </tr>
-            {% endfor %}
-        </table> 
-    {% elseif dataForDifferentTypes[0] == "control_radio" %}
-       
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
-        </div>
-        <canvas style="position:absolute;right:100px;top:200px;" id="myChartDoughnut" width="400" height="400"></canvas>
+                    var options = [];
+                    var values = [];
 
-        <script>
+                    for(var key in data){
+                        options.push(key);
+                        values.push(data[key]);
+                    }
 
-            var datajson = '{{ dataForDifferentTypes[2]|json_encode()|raw }}';
-            var data = JSON.parse(datajson);
+                    var ctxR = document.getElementById("myChartDoughnut");
+                    var myChartRadio = new Chart(ctxR, {
+                    type: 'doughnut',
+                    data: {
+                        labels: options,
+                        datasets: [{
+                        label: '# of Times Chosen',
+                        data: values,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false
+                    }
+                    });
+                </script>
 
-            var options = [];
-            var values = [];
+            {% elseif dataForDifferentTypes[0] == "control_checkbox" %}
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>
 
-            for(var key in data){
-                options.push(key);
-                values.push(data[key]);
-            }
+                <canvas id="myChartPolar" width="400" height="400"></canvas>
 
-            var ctxR = document.getElementById("myChartDoughnut");
-            var myChartRadio = new Chart(ctxR, {
-            type: 'doughnut',
-            data: {
-                labels: options,
-                datasets: [{
-                label: '# of Times Chosen',
-                data: values,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: false
-            }
-            });
-        </script>
+                <script>
+                    var datajson = '{{ dataForDifferentTypes[2]|json_encode()|raw }}';
+                    var data = JSON.parse(datajson);
 
-    {% elseif dataForDifferentTypes[0] == "control_checkbox" %}
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
-        </div>
+                    var options = [];
+                    var values = [];
 
-        <canvas style="position:absolute;right:100px;top:200px;" id="myChartPolar" width="400" height="400"></canvas>
-
-        <script>
-            var datajson = '{{ dataForDifferentTypes[2]|json_encode()|raw }}';
-            var data = JSON.parse(datajson);
-
-            var options = [];
-            var values = [];
-
-            for(var key in data){
-                options.push(key);
-                values.push(data[key]);
-            }
+                    for(var key in data){
+                        options.push(key);
+                        values.push(data[key]);
+                    }
 
 
-            var ctx = document.getElementById("myChartPolar");
-            var myChart = new Chart(ctx, {
-            type: 'polarArea',
-            data: {
-                labels: options,
-                datasets: [{
-                label: '# of Times Chosen',
-                data: values,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: false
-            }
-            });
-        </script>
+                    var ctx = document.getElementById("myChartPolar");
+                    var myChart = new Chart(ctx, {
+                    type: 'polarArea',
+                    data: {
+                        labels: options,
+                        datasets: [{
+                        label: '# of Times Chosen',
+                        data: values,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false
+                    }
+                    });
+                </script>
 
-    {% elseif dataForDifferentTypes[0] == "control_number" %}
-        
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
+            {% elseif dataForDifferentTypes[0] == "control_number" %}
+                
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>
+
+                <table class="dataTable" style="text-align:center;display:inline-block;width:400px;">
+                    <tr>
+                    <th> {{dataForDifferentTypes[1]}} </th>
+                    </tr>
+                    {% for datum in dataForDifferentTypes[2] %}
+                        <tr>
+                            <td> {{ datum }} </td>
+                        </tr>
+                    {% endfor %}
+                </table> 
+            {% elseif dataForDifferentTypes[0] == "control_fullname" %}
+                
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>
+
+                <table class="dataTable" style="text-align:center;display:inline-block;width:400px;">
+                    <tr>
+                        <th> Last Name </th>
+                        <th> First Name </th>
+                    </tr>
+                    {% for datum in dataForDifferentTypes[2] %}
+                        <tr>
+                            <td> {{ datum["last"] }} </td>
+                            <td> {{ datum["first"] }} </td>
+                        </tr>
+                    {% endfor %}
+                </table> 
+            {% elseif dataForDifferentTypes[0] == "control_email" %}
+                
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>    
+
+                <table class="dataTable" style="text-align:center;display:inline-block;width:400px;">
+                    <tr>
+                    <th> {{dataForDifferentTypes[1]}} </th>
+                    </tr>
+                    {% for datum in dataForDifferentTypes[2] %}
+                        <tr>
+                            <td> {{ datum }} </td>
+                        </tr>
+                    {% endfor %}
+                </table> 
+            {% elseif dataForDifferentTypes[0] == "control_address" %}
+                
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>    
+
+                <table class="dataTable" style="text-align:center;width:400px;display:inline-block;">
+                    <tr>
+                    <th> Address </th>
+                    
+                    </tr>
+                    {% for datum in dataForDifferentTypes[2] %}
+                        <tr>
+                            <td> 
+                                {% set addressArr = datum|split('<br>') %}
+                                {% for address in addressArr %}
+                                    {{ address }} <br>
+                                {% endfor %}
+                            </td>
+                            
+                        </tr>
+                    {% endfor %}
+                </table> 
+            {% elseif dataForDifferentTypes[0] == "control_phone" %}
+                
+                <div style="display:inline-block;width:400px;">
+                        <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
+                            {{ dataForDifferentTypes[1] }} </h2>
+                </div>    
+
+                <table class="dataTable" style="text-align:center;display:inline-block;width:400px;">
+                    <tr>
+                    <th> {{dataForDifferentTypes[1]}} </th>
+                    </tr>
+                    {% for datum in dataForDifferentTypes[2] %}
+                        <tr>
+                            <td> {{ datum }} </td>
+                        </tr>
+                    {% endfor %}
+                </table> 
+            {% endif %}
         </div>
     
-        <table class="dataTable" style="text-align:center;position:absolute;right:150px;top:200px;">
-            <tr>
-            <th> {{dataForDifferentTypes[1]}} </th>
-            </tr>
-            {% for datum in dataForDifferentTypes[2] %}
-                <tr>
-                    <td> {{ datum }} </td>
-                </tr>
-            {% endfor %}
-        </table> 
-    {% elseif dataForDifferentTypes[0] == "control_fullname" %}
-        
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
-        </div>
+    </div>
 
-        <table class="dataTable" style="text-align:center;position:absolute;right:150px;top:200px;">
-            <tr>
-                <th> Last Name </th>
-                <th> First Name </th>
-            </tr>
-            {% for datum in dataForDifferentTypes[2] %}
-                <tr>
-                    <td> {{ datum["last"] }} </td>
-                    <td> {{ datum["first"] }} </td>
-                </tr>
-            {% endfor %}
-        </table> 
-    {% elseif dataForDifferentTypes[0] == "control_email" %}
-        
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
-        </div>    
+    
 
-        <table class="dataTable" style="text-align:center;position:absolute;right:150px;top:200px;">
-            <tr>
-            <th> {{dataForDifferentTypes[1]}} </th>
-            </tr>
-            {% for datum in dataForDifferentTypes[2] %}
-                <tr>
-                    <td> {{ datum }} </td>
-                </tr>
-            {% endfor %}
-        </table> 
-    {% elseif dataForDifferentTypes[0] == "control_address" %}
-        
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
-        </div>    
-
-        <table class="dataTable" style="text-align:center;position:absolute;left:770px;top:200px;width:400px;">
-            <tr>
-            <th> Street Address </th>
-            <th> Street Address 2 </th>
-            <th> State/Province </th>
-            <th> Postal/Zip </th>
-            <th> Country </th>
-            </tr>
-            {% for datum in dataForDifferentTypes[2] %}
-                <tr>
-                    <td> {{ datum["addr_line1"] }} </td>
-                    <td> {{ datum["addr_line2"] }} </td>
-                    <td> {{ datum["state"] }} </td>
-                    <td> {{ datum["postal"] }} </td>
-                    <td> {{ datum["country"] }} </td>
-                </tr>
-            {% endfor %}
-        </table> 
-    {% elseif dataForDifferentTypes[0] == "control_phone" %}
-        
-        <div style="position:absolute;top:150px;right:150px;">
-                <h2 style="color:#f38d30;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;">
-                    {{ dataForDifferentTypes[1] }} </h2>
-        </div>    
-
-        <table class="dataTable" style="text-align:center;position:absolute;right:150px;top:200px;">
-            <tr>
-            <th> {{dataForDifferentTypes[1]}} </th>
-            </tr>
-            {% for datum in dataForDifferentTypes[2] %}
-                <tr>
-                    <td> {{ datum }} </td>
-                </tr>
-            {% endfor %}
-        </table> 
-    {% endif %}
+    
 
     
 

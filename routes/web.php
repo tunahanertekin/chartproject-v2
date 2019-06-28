@@ -50,3 +50,14 @@ $app->group('/multiple-choices',function(){
 
 $app->get('/example',ChartController::class.":index");
 
+
+$app->group('/jotcharts',function(){
+    
+    $this->get('',ChartController::class.":questionChoice");
+        
+    $this->group('/index',function(){
+        $this->post('',ChartController::class.":index");
+    });
+   
+});
+

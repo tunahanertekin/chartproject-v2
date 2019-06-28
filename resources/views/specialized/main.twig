@@ -40,7 +40,7 @@
                     Apply your filters for other question:
             </div>
             
-            <select name="otherQuestion">
+            <select style="display: inline-block;width:200px;" name="otherQuestion">
                 {% for qid,qname in otherQuestions %}
                     <option value="other{{qid}}"> {{qname}} </option>
                 {% endfor %}

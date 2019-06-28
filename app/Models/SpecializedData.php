@@ -42,6 +42,7 @@ class SpecializedData{
 
     public function detectMultipleChoices(){
         $questions = $this->jotformAPI->getFormQuestions($this->form["id"]);
+
         
         $multiple = array();
         foreach($questions as $q){
@@ -447,8 +448,8 @@ class SpecializedData{
 
         foreach($validSubmissions as $v){
 
-            if(array_key_exists("answer",$v["answers"][$targetQuestionID]))
-                array_push($addressArr,$v["answers"][$targetQuestionID]["answer"]);
+            if(array_key_exists("prettyFormat",$v["answers"][$targetQuestionID]))
+                array_push($addressArr,$v["answers"][$targetQuestionID]["prettyFormat"]);
         }
 
         $targetQuestionName = $this->jotformAPI->getFormQuestion($this->form["id"],$targetQuestionID)["text"];

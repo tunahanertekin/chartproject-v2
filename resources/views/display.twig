@@ -3,141 +3,163 @@
 
 {% block content %}
 
-<div style="display:inline-block;text-align: center;">
+<body class="firstpage">
+    <div class="sidenav">
 
-    <br><br><br>
-
-    <h2 style="color:#f38d30;text-align:center;font-style: italic;
-    font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;"> Form: {{ formName }} </h2>
-    
-    <br><br>
-    
-    <form style="text-align:center;" action="/public/multiple-choices" method="POST">
+        <br>
+        
+        <form style="text-align:center;" action="/public/multiple-choices" method="POST">
+                
+            <button name="specialize" class="button" value="last24hours">last 24 hours</button>
+            <button name="specialize" class="button" value="before24hours">before</button>
+            <br>
+            <button name="specialize" class="button" value="last7days">last 7 days</button>
+            <button name="specialize" class="button" value="before7days">before</button>
+            <br>
+            <button name="specialize" class="button" value="last30days">last 30 days</button>
+            <button name="specialize" class="button" value="before30days">before</button>
+            <br>
+            <button name="specialize" class="button" value="lastoneyear">last one year</button>
+            <button name="specialize" class="button" value="beforeoneyear">before</button>
             
-        <button name="specialize" class="button" value="last24hours">last 24 hours</button>
-        <button name="specialize" class="button" value="before24hours">before</button>
-        <br>
-        <button name="specialize" class="button" value="last7days">last 7 days</button>
-        <button name="specialize" class="button" value="before7days">before</button>
-        <br>
-        <button name="specialize" class="button" value="last30days">last 30 days</button>
-        <button name="specialize" class="button" value="before30days">before</button>
-        <br>
-        <button name="specialize" class="button" value="lastoneyear">last one year</button>
-        <button name="specialize" class="button" value="beforeoneyear">before</button>
+            <br><br>
+            date between: <br>
+            from: <input type="date" name="fromDate"> <br>
+            to: <input type="date" name="toDate"> <br>
+            <button name="specialize" class="button" value="betweenDates">pick</button>
+            <br><br>
         
-        <br><br>
-        date between: <br>
-        from: <input type="date" name="fromDate"> <br>
-        to: <input type="date" name="toDate"> <br>
-        <button name="specialize" class="button" value="betweenDates">pick</button>
-        <br><br>
-    
-        after date: <br>
-        <input type="date" name="afterDate"> <br>
-        <button name="specialize" class="button" value="chooseAfterDate">pick</button>
-        <br><br>
-    
-        before date: <br>
-        <input type="date" name="beforeDate"> <br>
-        <button name="specialize" class="button" value="chooseBeforeDate">pick</button>
-        <br><br><br>
-    
-    </form>
-    
-    <form style="text-align:center;" method="get" action="/public/multiple-choices/detailed">
-    
-        <button class="button" name="detailedView" value="detailedView">get more detailed info</button>
-    
-    </form>
-     <br><br>
-    
-    {% for result in res %}
-        {% for key, arr in result %}
+            after date: <br>
+            <input type="date" name="afterDate"> <br>
+            <button name="specialize" class="button" value="chooseAfterDate">pick</button>
+            <br><br>
         
-
-        {% set infoarr = key|split(',') %}
-        {% set questionID = infoarr[0] %}
-        {% set questionName = infoarr[1] %}
-
-        <div style="border-radius:4px;width:500px;text-align:center;
-        font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
-        font-size:20px;color:aliceblue;background-color:#f38d30;" class="w3-container">
-            <p>Question: {{ questionName }}</p>
+            before date: <br>
+            <input type="date" name="beforeDate"> <br>
+            <button name="specialize" class="button" value="chooseBeforeDate">pick</button>
+            <br>
+        
+        </form>
+        
+        <form style="text-align:center;" method="get" action="/public/multiple-choices/detailed">
+        
+            <button class="button" name="detailedView" value="detailedView">get more detailed info</button>
+        
+        </form>
+    
+    </div>
+    
+    <div class="row">
+        <div class="defcolumnaux" style="width:25%;">
+            
         </div>
-      
-            <div>
-                
-                <canvas id="myChart{{ key }}" width="400" height="400"></canvas>
+        <div class="defcolumn" style="top:200px;width:50%;">
+                <div style="display:inline-block;text-align: center;">
+                        <h2 style="color:#f38d30;text-align:center;font-style: italic;
+                        font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;"> Form: {{ formName }} </h2>
+                         <br><br>
+                        
+                        {% for result in res %}
+                            {% for key, arr in result %}
+                            
+                    
+                            {% set infoarr = key|split(',') %}
+                            {% set questionID = infoarr[0] %}
+                            {% set questionName = infoarr[1] %}
+                    
+                            <div style="border-radius:4px;width:500px;text-align:center;
+                            font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+                            font-size:20px;color:aliceblue;background-color:#f38d30;" class="w3-container">
+                                <p>Question: {{ questionName }}</p>
+                            </div>
+                          
+                                <div>
+                                    
+                                    <canvas id="myChart{{ key }}" width="400" height="400"></canvas>
+                    
+                                    <form action="/public/multiple-choices/detailed/{{ questionID }}" method="POST">
+                                        <button class="button">Advanced Filters</button>
+                                    </form>
+                                    
+                                    <script>
+                                    var arrjson = '{{ arr|json_encode()|raw }}';
+                                    array = JSON.parse(arrjson);
+                        
+                                    var keyarr=[];
+                                    var valarr=[];
+                                    
+                                    var i=0;
+                                    for(var key in array){
+                                        keyarr[i]=key;
+                                        valarr[i]=array[key];
+                                        i++;
+                                    }
+                                    
+                                    var ctx = document.getElementById('myChart{{ key }}').getContext('2d');
+                                    
+                                    var myChart = new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: keyarr,
+                                            datasets: [{
+                                                label: '# of Choices',
+                                                data: valarr,
+                                                backgroundColor: [
+                                                    'rgba(255, 99, 132, 0.2)',
+                                                    'rgba(54, 162, 235, 0.2)',
+                                                    'rgba(255, 206, 86, 0.2)',
+                                                    'rgba(75, 192, 192, 0.2)',
+                                                    'rgba(153, 102, 255, 0.2)',
+                                                    'rgba(255, 159, 64, 0.2)'
+                                                ],
+                                                borderColor: [
+                                                    'rgba(255, 99, 132, 1)',
+                                                    'rgba(54, 162, 235, 1)',
+                                                    'rgba(255, 206, 86, 1)',
+                                                    'rgba(75, 192, 192, 1)',
+                                                    'rgba(153, 102, 255, 1)',
+                                                    'rgba(255, 159, 64, 1)'
+                                                ],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: false,
+                                            legend: {
+                                                    labels: {
+                                                        fontColor: 'white'
+                                                    }
+                                            },
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero: true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+                                </script>
+                        
+                                </div>
+                        
+                            {% endfor %}
+                            <br><br><br>
+                        {% endfor %}
+                        
+                    
+                    
+                    </div>
+        </div>
+        <div class="defcolumnaux">
 
-                <form action="/public/multiple-choices/detailed/{{ questionID }}" method="POST">
-                    <button class="button">Advanced Filters</button>
-                </form>
-                
-                <script>
-                var arrjson = '{{ arr|json_encode()|raw }}';
-                array = JSON.parse(arrjson);
-    
-                var keyarr=[];
-                var valarr=[];
-                
-                var i=0;
-                for(var key in array){
-                    keyarr[i]=key;
-                    valarr[i]=array[key];
-                    i++;
-                }
-                
-                var ctx = document.getElementById('myChart{{ key }}').getContext('2d');
-                
-                var myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: keyarr,
-                        datasets: [{
-                            label: '# of Choices',
-                            data: valarr,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: false,
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        }
-                    }
-                });
-            </script>
-    
-            </div>
-    
-        {% endfor %}
-        <br><br><br>
-    {% endfor %}
-    
 
+        </div>
 
-</div>
+    </div>
+    
+    
+</body>
 
 
 
