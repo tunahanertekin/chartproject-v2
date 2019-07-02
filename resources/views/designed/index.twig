@@ -24,7 +24,8 @@
       </div>
       
       <div id="chartPlace">
-      
+      <br><br><br>
+      Specify your results using "Filters" section.
       </div>
       <br>
 
@@ -43,11 +44,11 @@
         var questionName = [1];
         var options = question[2];
 
-        //console.log(options);
         var optionFilterArr = [];
         var filteredOptionsArr = [];
-        
-        
+                
+        var myPieChart;
+
         
 
         function applyOptionFilter() {
@@ -90,7 +91,6 @@
             if(push)
               optionFilteredSubmissionArr.push(submissionArr[key]);
           }
-          //submissionArr = optionFilteredSubmissionArr;
         }
 
         function assignAndDraw(){
@@ -120,10 +120,14 @@
           document.getElementById("chartPlace").innerHTML="<canvas id=\"myPieChart\" width=\"400\" height=\"400\"></canvas>";
           drawChart(keyarr,valarr);
         }
+        
 
         function drawChart(keyarr,valarr){
+          if(myPieChart != null){
+            myPieChart.destroy();
+          }
           var ctxPie = document.getElementById("myPieChart").getContext('2d');
-                        var myPieChart = new Chart(ctxPie, {
+                        myPieChart = new Chart(ctxPie, {
                             type: 'pie',
                             data: {
                                 labels: keyarr,
@@ -157,7 +161,8 @@
           var fromDate = dates[0];
           var toDate = dates[1];
 
-          if(fromDate.value.length != "" && toDate.value.length == ""){
+
+          if(fromDate.value.length != 0 && toDate.value.length == 0){
             var fromDateFormat = new Date(fromDate.value);
             for(var key in submissionArr){
               var subDate = new Date(submissionArr[key][0]);
@@ -168,22 +173,20 @@
                 continue;
               }
             }
-            //submissionArr = dateFilteredSubmissionArr;
           }
-          else if(fromDate.value.length == "" && toDate.value.length != ""){
+          else if(fromDate.value.length == 0 && toDate.value.length != 0){
             var toDateFormat = new Date(toDate.value);
             for(var key in submissionArr){
               var subDate = new Date(submissionArr[key][0]);
-              if(toDateFormat<subDate){
+              if(subDate<toDateFormat){
                 dateFilteredSubmissionArr.push(submissionArr[key]);
               }
               else{
                 continue;
               }
             }
-            //submissionArr = dateFilteredSubmissionArr;
           }
-          else if(fromDate.value.length == "" && toDate.value.length != ""){
+          else if(fromDate.value.length != 0 && toDate.value.length != 0){
             var fromDateFormat = new Date(fromDate.value);
             var toDateFormat = new Date(toDate.value);
             for(var key in submissionArr){
@@ -195,7 +198,6 @@
                 continue;
               }
             }
-            //submissionArr = dateFilteredSubmissionArr;
           }
           else{
             dateFilteredSubmissionArr = submissionArr;
@@ -217,9 +219,7 @@
                 givenArr.push(optionFilteredSubmissionArr[key1]);
             }
           }
-        }
-
-        
+        }        
       
       </script>
 
@@ -261,7 +261,7 @@
 
 
         <br><br>
-        <button class="button" onclick="assignAndDraw()">Draw Chart</button>
+        <button class="button" onclick="assignAndDraw()">See Chart</button>
         </div>
     </div>
     
@@ -271,7 +271,8 @@
     </div>
 
     <div class="column" style="background-color:#ccc;color:blue;height:700px;width:30%;">
-      Explanation
+      <br><br>
+      <h2 class="questionHeader">How it works?</h2>
     </div>
 
     <div style="width: 4%;">
@@ -292,13 +293,22 @@
 
     </div>
 
-
-    <div class="orangecolumn" style="background-color:#aaa;color:#f38d30;height:700px;width:30%;">
-      First Date Period: <br>
-      <input type="date" name="datePeriod1" > - <input type="date" name="datePeriod1"> <br>
-      Second Date Period: <br>
-      <input type="date" name="datePeriod2" > - <input type="date" name="datePeriod2">
     
+
+    <div class="orangecolumn" style="background-color:#aaa;color:black;height:700px;width:30%;">
+      
+      <br><br>
+
+      <h2 class="questionHeader" style="color:black" >Compare Periods</h2>
+     
+      <br><br><br>
+
+      First Date Period: <br>
+      <input type="date" name="datePeriod1" onchange="setValues()"> - <input type="date" name="datePeriod1" onchange="setValues()"> <br>
+      Second Date Period: <br>
+      <input type="date" name="datePeriod2" onchange="setValues()"> - <input type="date" name="datePeriod2" onchange="setValues()">
+      <br><br>
+      <button class="button" onclick="setValues()">See Radar Chart</button>
     
     
     </div>
@@ -312,8 +322,255 @@
 
 
     <div class="column" style="background-color:#bbb;height:700px;width:30%;">
-      <script>
+        <br><br>
         
+        <h2 class="questionHeader">Radar</h2>
+
+        <div id="radarChartPlace">
+            <br><br><br>
+            <p style="color:orange">
+                Specify your results using "Compare Periods" section.
+            </p>
+            
+        </div>
+        
+        <br><br>
+        
+      
+      <script>
+
+        var firstSubmissionDataset = [];
+        var secondSubmissionDataset = [];
+
+        var commonSubmissions = [];
+
+        var firstValSet = [];
+        var secondValSet = [];
+
+        var originalOptions = question[2];
+
+        var firstPeriodStr = "";
+        var secondPeriodStr = "";
+
+        var radarChart;
+
+
+        function setValues(){
+
+          setFirstDataset();
+          setSecondDataset();
+          
+          var assocArr1 = [];
+          var assocArr2 = [];
+          for(var key in originalOptions){
+            assocArr1[originalOptions[key]]=0;
+            assocArr2[originalOptions[key]]=0;
+          }
+
+          for(var key in firstSubmissionDataset){
+            var currentAnswer = firstSubmissionDataset[key][1];
+
+            for(var key2 in currentAnswer){
+              assocArr1[currentAnswer[key2]]++;
+            }
+          }
+
+          for(var key in secondSubmissionDataset){
+            var currentAnswer = secondSubmissionDataset[key][1];
+
+            for(var key2 in currentAnswer){
+              assocArr2[currentAnswer[key2]]++;
+            }
+          }
+
+          firstValSet = [];
+          secondValSet = [];
+
+          for(var key in assocArr1){
+            firstValSet.push(assocArr1[key]);
+          }
+
+          for(var key in assocArr2){
+            secondValSet.push(assocArr2[key]);
+          }
+          document.getElementById("radarChartPlace").innerHTML="<canvas id=\"myChartRadar\" width=\"400\" height=\"400\"></canvas>";
+          drawRadar();
+        }
+
+        function dateFormatter(date){
+          dateStr = date.toString();
+          var elements = dateStr.split(" ");
+          return elements[1] + " " + elements[2] + ", " + elements[3] + " " + elements[0];
+        }
+        
+
+        function setFirstDataset(){
+          var dates = document.getElementsByName("datePeriod1");
+          var fromDate = dates[0];
+          var toDate = dates[1];
+
+          firstSubmissionDataset = [];
+
+          if(fromDate.value.length != 0 && toDate.value.length == 0){
+            var fromDateFormat = new Date(fromDate.value);
+            firstPeriodStr = "after "+dateFormatter(fromDateFormat);
+            for(var key in submissionArr){
+              var subDate = new Date(submissionArr[key][0]);
+              if(fromDateFormat<subDate){
+                firstSubmissionDataset.push(submissionArr[key]);
+              }
+              else{
+                continue;
+              }
+            }
+          }
+          else if(fromDate.value.length == 0 && toDate.value.length != 0){
+            var toDateFormat = new Date(toDate.value);
+            firstPeriodStr = "before "+dateFormatter(toDateFormat);
+            for(var key in submissionArr){
+              var subDate = new Date(submissionArr[key][0]);
+              if(subDate<toDateFormat){
+                firstSubmissionDataset.push(submissionArr[key]);
+              }
+              else{
+                continue;
+              }
+            }
+          }
+          else if(fromDate.value.length != 0 && toDate.value.length != 0){
+            var fromDateFormat = new Date(fromDate.value);
+            var toDateFormat = new Date(toDate.value);
+            firstPeriodStr = "between "+dateFormatter(fromDateFormat)+" and "+dateFormatter(toDateFormat);
+            for(var key in submissionArr){
+              var subDate = new Date(submissionArr[key][0]);
+              if(fromDateFormat<subDate && subDate<toDateFormat){
+                firstSubmissionDataset.push(submissionArr[key]);
+              }
+              else{
+                continue;
+              }
+            }
+          }
+          else{
+              firstPeriodStr = "All times"
+              firstSubmissionDataset = submissionArr;
+          }
+        }
+
+        function setSecondDataset(){
+          var dates = document.getElementsByName("datePeriod2");
+          var fromDate = dates[0];
+          var toDate = dates[1];
+
+          secondSubmissionDataset = [];
+
+          if(fromDate.value.length != 0 && toDate.value.length == 0){
+            var fromDateFormat = new Date(fromDate.value);
+            secondPeriodStr = "after "+dateFormatter(fromDateFormat);
+            for(var key in submissionArr){
+              var subDate = new Date(submissionArr[key][0]);
+              if(fromDateFormat<subDate){
+                secondSubmissionDataset.push(submissionArr[key]);
+              }
+              else{
+                continue;
+              }
+            }
+          }
+          else if(fromDate.value.length == 0 && toDate.value.length != 0){
+            var toDateFormat = new Date(toDate.value);
+            secondPeriodStr = "before "+dateFormatter(toDateFormat);
+            for(var key in submissionArr){
+              var subDate = new Date(submissionArr[key][0]);
+              if(subDate<toDateFormat){
+                secondSubmissionDataset.push(submissionArr[key]);
+              }
+              else{
+                continue;
+              }
+            }
+          }
+          else if(fromDate.value.length != 0 && toDate.value.length != 0){
+            var fromDateFormat = new Date(fromDate.value);
+            var toDateFormat = new Date(toDate.value);
+            secondPeriodStr = "between "+dateFormatter(fromDateFormat)+" and "+dateFormatter(toDateFormat);
+            for(var key in submissionArr){
+              var subDate = new Date(submissionArr[key][0]);
+              if(fromDateFormat<subDate && subDate<toDateFormat){
+                secondSubmissionDataset.push(submissionArr[key]);
+              }
+              else{
+                continue;
+              }
+            }
+          }
+          else{
+              secondPeriodStr = "All times"
+              secondSubmissionDataset = submissionArr;
+          }
+        }
+
+        
+        function drawRadar(){
+
+          //console.log("Hey");
+
+          var max = 0;
+          for(var key in firstValSet){
+            if(firstValSet[key]>max){
+              max = firstValSet[key];
+            }
+          }
+          for(var key in secondValSet){
+            if(secondValSet[key]>max){
+              max = secondValSet[key];
+            }
+          }
+
+          var valuesCanvas = document.getElementById("myChartRadar");
+
+
+
+          var valuesData = {
+          labels: originalOptions,
+          datasets: [{
+              label: firstPeriodStr,
+              backgroundColor: "rgba(200,0,0,0.2)",
+              borderColor: "orange",
+              data: firstValSet
+          },
+          {
+              label: secondPeriodStr,
+              backgroundColor: "rgba(0,0,200,0.2)",
+              borderColor: "blue",
+              data: secondValSet
+          }
+          ]
+          };
+
+          if(radarChart != null){
+            radarChart.destroy();
+          }
+
+          radarChart = new Chart(valuesCanvas, {
+              type: 'radar',
+              data: valuesData,
+              options: {
+                  responsive: false,
+                  scale: {
+                      angleLines: {
+                        display: true,
+                        color: "white"
+                      },
+                      ticks: {
+                      min: 0,
+                      max: max
+                      }
+                  }
+          }
+          
+          });
+        }
         
 
 
@@ -326,12 +583,18 @@
     </div>
 
     <div class="orangecolumn" style="background-color:#ccc;color:blue;height:700px;width:30%;">
-      Explanation
+      <br><br>
+      <h2 class="questionHeader" style="color:black">How it works?</h2>
+
     </div>
 
     <div style="width: 4%;">
 
     </div>
+  </div>
+
+  <div class="row" style="height: 25px">
+
   </div>
 
 

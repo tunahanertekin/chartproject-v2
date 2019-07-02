@@ -1,0 +1,278 @@
+{% extends 'layouts/navbar.twig' %}
+
+{% block content %}
+
+   
+
+    {% set otherQuestionType = "" %}
+    {% if otherQuestion[2] == "control_textbox" %}
+        {% set otherQuestionType = "Short Text Entry"  %}
+    {% elseif otherQuestion[2] == "control_textarea" %}
+        {% set otherQuestionType = "Long Text Entry" %}
+    {% elseif otherQuestion[2] == "control_dropdown" %}
+        {% set otherQuestionType = "Dropdown" %}
+    {% elseif otherQuestion[2] == "control_radio" %}
+        {% set otherQuestionType = "Single Choice" %}
+    {% elseif otherQuestion[2] == "control_checkbox" %}
+        {% set otherQuestionType = "Multiple Choice" %}
+    {% elseif otherQuestion[2] == "control_number" %}
+        {% set otherQuestionType = "Number" %}
+    {% elseif otherQuestion[2] == "control_fullname" %}
+        {% set otherQuestionType = "Full Name" %}
+    {% elseif otherQuestion[2] == "control_email" %}
+        {% set otherQuestionType = "Email" %}
+    {% elseif otherQuestion[2] == "control_address" %}
+        {% set otherQuestionType = "Address" %}
+    {% elseif otherQuestion[2] == "control_phone" %}
+        {% set otherQuestionType = "Phone" %}
+    {% endif %}
+
+    <div class="row" style="height: 25px;">
+
+
+    </div>
+
+    <div class="row">
+        <div style="width:6%;height:auto;">
+
+        </div>
+        <div class="orangecolumn" style="width:41%;height:auto;">
+            <h2 class="questionHeader" style="color:black;"> {{ question[1] }} </h2>
+            <p class="questionHeader" style="color:black;"> Multiple Choice </p>
+            
+            <div id="chartArea">
+                Chart area.
+            </div>
+
+            <br>
+            <div>
+                <p style="color:white;" class="questionHeader">
+                    Option scope:
+                </p>
+                {% for option in question[2] %}
+                    <input type="checkbox" name="check" onchange="assignAndDraw()" value="{{option}}">{{ option }} <br>
+                {% endfor %}
+                <br><br>
+                <p style="color:white;" class="questionHeader">Between:</p>
+                <input type="date" name="betweenDates" onchange="assignAndDraw()">
+                - <input type="date" name="betweenDates" onchange="assignAndDraw()" >
+
+                <br><br>
+                
+
+
+
+                <button class="button">Draw</button>
+            </div>
+
+            <script>
+                var subarrjson = '{{ submissionArr|json_encode()|raw }}';
+                var submissionArr = JSON.parse(subarrjson);
+
+                var questionjson = '{{ question|json_encode()|raw }}';
+                var question = JSON.parse(questionjson);
+
+                var otherQuestionjson = '{{ otherQuestion|json_encode()|raw }}';                
+                var otherQuestion = JSON.parse(otherQuestionjson);
+                
+                var qid = question[0];
+                var questionName = question[1];
+                var options = question[2];
+
+                var optionFilterArr = [];
+                var filteredOptionsArr = [];
+
+                var dateValidSubmissions = [];
+                var optionValidSubmissions = [];
+                var givenSubmissions = [];
+
+                var myPieChart;
+
+                //console.log(submissionArr);
+                //console.log(question);
+                //console.log(otherQuestion);
+
+                assignAndDraw();
+
+                function updateDates(){
+                    var dates = document.getElementsByName("betweenDates");
+                    var fromDate = dates[0].value;
+                    var toDate = dates[1].value;
+
+                    dateValidSubmissions = [];
+
+                    if(fromDate.length != 0 && toDate.length == 0){
+                        var fromDateFormat = new Date(fromDate);
+                        for(var key in submissionArr){
+                            var subDate = new Date(submissionArr[key][0]);
+                            if(fromDateFormat<subDate){
+                                dateValidSubmissions.push(submissionArr[key]);
+                            }
+                            else{
+                                continue;
+                            }
+                        }
+                    }
+                    else if(fromDate.length == 0 && toDate.length != 0){
+                        var toDateFormat = new Date(toDate);
+                        for(var key in submissionArr){
+                            var subDate = new Date(submissionArr[key][0]);
+                            if(subDate<toDateFormat){
+                                dateValidSubmissions.push(submissionArr[key]);
+                            }
+                            else{
+                                continue;
+                            }
+                        }
+                    }
+                    else if(fromDate.length != 0 && toDate.length != 0){
+                        var fromDateFormat = new Date(fromDate);
+                        var toDateFormat = new Date(toDate);
+                        for(var key in submissionArr){
+                            var subDate = new Date(submissionArr[key][0]);
+                            if(fromDateFormat<subDate && subDate<toDateFormat){
+                                dateValidSubmissions.push(submissionArr[key]);
+                            }
+                            else{
+                                continue;
+                            }
+                        }
+                    }
+                    else{
+                        dateValidSubmissions = submissionArr;
+                    }
+
+                }
+
+                function updateOptions(){
+                    var x = document.getElementsByName("check");
+                    
+                    optionFilterArr = [];
+                    filteredOptionsArr = [];
+                    for (var i = 0; i < x.length; i++) {
+                        if (x[i].type == "checkbox") {
+                            if(x[i].checked == true){
+                                optionFilterArr.push(x[i].value);
+                            }
+                            else{
+                                filteredOptionsArr.push(x[i].value);
+                            }
+                        }
+                    }
+
+                    updateOptionsSubmissions();
+                }
+
+                function updateOptionsSubmissions(){
+                    var valid = true;
+                    optionValidSubmissions = [];
+                    for(var key in submissionArr){
+                        valid = true;
+                        for(var key2 in optionFilterArr){
+                            if(!submissionArr[key][1].includes(optionFilterArr[key2])){
+                                valid = false;
+                            }
+                        }
+                        if(valid){
+                            optionValidSubmissions.push(submissionArr[key]);
+                        }
+                    }
+                }
+
+                function mergeSubmissions(){
+                    updateOptions();
+                    updateDates();
+
+                    givenSubmissions = [];
+                    for(var key1 in dateValidSubmissions){
+                        for(var key2 in optionValidSubmissions){
+                            if(dateValidSubmissions[key1][3] == optionValidSubmissions[key2][3]){
+                                givenSubmissions.push(dateValidSubmissions[key1]);
+                            }
+                        }
+                    }
+                }
+
+                function assignAndDraw(){
+                    mergeSubmissions();
+
+                    var assocArr = [];
+                    for(var key in filteredOptionsArr){
+                        assocArr[filteredOptionsArr[key]] = 0;
+                    }
+                    for(var key in givenSubmissions){
+                        for(var key2 in givenSubmissions[key][1]){
+                            assocArr[givenSubmissions[key][1][key2]]++;
+                        }
+                    }
+
+                    var keyarr = [];
+                    var valarr = [];
+                    for(var key in assocArr){
+                        keyarr.push(key);
+                        valarr.push(assocArr[key]);
+                    }
+
+                    document.getElementById("chartArea").innerHTML = "<canvas id=\"myPieChart\" width=\"400\" height=\"400\" style=\"margin:0 auto;\"></canvas>";
+                    drawPieChart(keyarr,valarr);
+                }
+
+                function drawPieChart(keyarr,valarr){
+                    if(myPieChart != null){
+                        myPieChart.destroy();
+                    }
+                    var ctxPie = document.getElementById("myPieChart").getContext('2d');
+                                    myPieChart = new Chart(ctxPie, {
+                                        type: 'doughnut',
+                                        data: {
+                                            labels: keyarr,
+                                            datasets: [{
+                                            backgroundColor: [
+                                                "rgb(255, 99, 132)",
+                                                "rgb(75, 192, 192)",
+                                                "rgb(54, 162, 235)",
+                                                "rgb(153, 102, 255)",
+                                                "rgb(255, 205, 86)",
+                                                "rgb(231,233,237)",
+                                                "rgb(255, 159, 64)"
+                                            ],
+                                            data: valarr
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: false,
+                                                    legend: {
+                                                        labels: {
+                                                            fontColor: 'white'
+                                                        }
+                                                    }
+                                                }
+                                    });
+                }
+            </script>
+      
+            
+
+        </div>
+        <div style="width:6%;height:auto;">
+
+        </div>
+        <div class="orangecolumn" style="width:41%;height:auto;">
+            <h2 class="questionHeader" style="color:black;"> {{ otherQuestion[1] }} </h2>
+            <p class="questionHeader" style="color:black;"> {{ otherQuestionType }} </p>
+
+
+        </div>
+        <div style="width:6%;height:auto;">
+
+        </div>
+
+    </div>
+
+    <div class="row" style="height:25px;">
+
+
+    </div>
+
+
+{% endblock %}

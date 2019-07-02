@@ -58,6 +58,16 @@ $app->group('/jotcharts',function(){
     $this->group('/index',function(){
         $this->post('',ChartController::class.":index");
     });
+
+    $this->group('/time-basis',function(){
+        $this->get('',ChartController::class.":timeBasis");
+        $this->post('',ChartController::class.":timeBasis");
+    });
+
+    $this->group('/related-stats',function(){
+        $this->get('',ChartController::class.":relatedStats");
+        $this->post('',ChartController::class.":relatedStats");
+    });
    
 });
 
