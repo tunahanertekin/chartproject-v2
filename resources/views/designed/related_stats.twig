@@ -2,6 +2,11 @@
 
 {% block content %}
 
+    <style>
+        a{
+            color:black;
+        }
+    </style>
    
 
     {% set otherQuestionType = "" %}
@@ -36,6 +41,19 @@
         <div style="width:6%;height:auto;">
 
         </div>
+   
+        <div class="orangecolumn" style="width:41%;height:auto;">
+            <h2 class="questionHeader" style="color:black;"> {{ otherQuestion[1] }} </h2>
+            <p class="questionHeader" style="color:black;"> {{ otherQuestionType }} </p>
+            <div id="otherStatArea">
+
+            </div>
+            
+
+        </div>
+        <div style="width:6%;height:auto;">
+
+        </div>
         <div class="orangecolumn" style="width:41%;height:auto;">
             <h2 class="questionHeader" style="color:black;"> {{ question[1] }} </h2>
             <p class="questionHeader" style="color:black;"> Multiple Choice </p>
@@ -50,7 +68,7 @@
                     Option scope:
                 </p>
                 {% for option in question[2] %}
-                    <input type="checkbox" name="check" onchange="assignAndDraw()" value="{{option}}">{{ option }} <br>
+                    <input type="checkbox" name="check" onchange="assignAndDraw()" value="{{option}}"> {{option}} <br>  
                 {% endfor %}
                 <br><br>
                 <p style="color:white;" class="questionHeader">Between:</p>
@@ -58,14 +76,13 @@
                 - <input type="date" name="betweenDates" onchange="assignAndDraw()" >
 
                 <br><br>
-                
 
-
-
-                <button class="button">Draw</button>
+                <button class="button" onclick="assignAndDraw()">Draw</button>
             </div>
 
             <script>
+                var formID = ' {{ formID }} ';
+
                 var subarrjson = '{{ submissionArr|json_encode()|raw }}';
                 var submissionArr = JSON.parse(subarrjson);
 
@@ -87,6 +104,11 @@
                 var givenSubmissions = [];
 
                 var myPieChart;
+                var myOtherChart;
+                var myOtherChartMC;
+
+                var fromDate;
+                var toDate;
 
                 //console.log(submissionArr);
                 //console.log(question);
@@ -96,8 +118,8 @@
 
                 function updateDates(){
                     var dates = document.getElementsByName("betweenDates");
-                    var fromDate = dates[0].value;
-                    var toDate = dates[1].value;
+                    fromDate = dates[0].value;
+                    toDate = dates[1].value;
 
                     dateValidSubmissions = [];
 
@@ -191,6 +213,10 @@
                             }
                         }
                     }
+                    
+                    //console.log(submissionArr);
+                    //console.log(optionValidSubmissions);
+                    otherStat();
                 }
 
                 function assignAndDraw(){
@@ -249,18 +275,292 @@
                                                 }
                                     });
                 }
+
+        
+                function otherStat(){
+                    //detect the question type
+                    //console.log(otherQuestion)
+                    otherQuestionType = otherQuestion[2];
+
+                    var ordinaryTableTypes = [
+                        "control_textbox",
+                        "control_textarea",
+                        "control_number",
+                        "control_email"
+                    ];
+                    
+                    //console.log(givenSubmissions);
+                    var statHtml = document.getElementById("otherStatArea");
+                    statHtml.innerHTML = "";
+                    var explanation = "";
+
+                        if(optionFilterArr.length == 0){
+                            if(fromDate.length != 0 && toDate.length == 0){
+                                explanation = "There are the submission statistics after "+fromDate+".";
+                            }
+                            else if(fromDate.length == 0 && toDate.length != 0){
+                                explanation = "There are the submission statistics before "+toDate+".";
+                            }
+                            else if(fromDate.length != 0 && toDate.length != 0){
+                                explanation = "There are the submission statistics between "+fromDate+" and "+toDate+".";
+                            }
+                            else{
+                                explanation = "All results.<br><br>You can use filters on the section right.";
+                            }
+                        }
+                        else{
+                            if(fromDate.length != 0 && toDate.length == 0){
+                                explanation += "There are the submission statistics of people who selected";
+                                for(var key in optionFilterArr){
+                                    explanation += " '" +optionFilterArr[key]+"'<br> ";
+                                }
+                                explanation += "<br> in question <font color=\"white\">"+ questionName +"</font> after "+fromDate+".";
+                            }
+                            else if(fromDate.length == 0 && toDate.length != 0){
+                                explanation += "There are the submission statistics of people who selected";
+                                for(var key in optionFilterArr){
+                                    explanation += " '" +optionFilterArr[key]+"'<br> ";
+                                }
+                                explanation += "<br> in question <font color=\"white\">"+ questionName +"</font> before "+toDate+".";
+                            }
+                            else if(fromDate.length != 0 && toDate.length != 0){
+                                explanation += "There are the submission statistics of people who selected";
+                                for(var key in optionFilterArr){
+                                    explanation += " '" +optionFilterArr[key]+"'<br> ";
+                                }
+                                explanation += "<br> in question <font color=\"white\">"+ questionName +"</font> between "+fromDate+" and "+toDate+".";
+                            }
+                            else{
+                                explanation += "There are the submission statistics of people who selected";
+                                for(var key in optionFilterArr){
+                                    explanation += " <br> '" +optionFilterArr[key]+"'";
+                                }
+                                explanation += "<br> in question <font color=\"white\">"+ questionName + "</font> for all times.";
+                                
+                            }
+                        }
+
+                    
+                    if(ordinaryTableTypes.includes(otherQuestionType)){
+                        var str = "";
+                        str += "<input style=\"margin:0 auto;width:400px;\" class=\"w3-input\" type=\"text\" id=\"searchBar\" onkeyup=\"searchInTable()\" placeholder=\"Search...\"><br>";
+                        str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
+                        str += "<tr><th>"+ otherQuestion[1] +"</th></tr>";
+                        for(var key in givenSubmissions){
+                            //console.log();
+                            str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+formID.substring(1,formID.length-1)+"/"+givenSubmissions[key][3]+"\">"+givenSubmissions[key][2]+"</a>"+"</td> </tr>";
+                        }
+                        str += "</table>";
+
+                        statHtml.innerHTML = str+"<br><br>"+explanation;
+                    }
+                    else if(otherQuestionType == "control_dropdown"){
+                        var tempArr = [];
+                        for(var key in givenSubmissions){
+                            if(givenSubmissions[key][2] in tempArr){
+                                tempArr[givenSubmissions[key][2]]++;
+                            }
+                            else{
+                                tempArr[givenSubmissions[key][2]] = 1;
+                            }
+                        }
+                        
+                        var str = "";
+                        str += "<input style=\"margin:0 auto;width:400px;\" class=\"w3-input\" type=\"text\" id=\"searchBar\" onkeyup=\"searchInTable()\" placeholder=\"Search for input...\"><br>";
+                        str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
+                        str += "<tr><th> Choice </th> <th> Times </th> </tr>";
+
+                        for(var key in tempArr){
+                            str += "<tr> <td>"+ key +"</td> <td> "+ tempArr[key] +" </td> </tr>";
+                        }
+                        str += "</table>";
+
+                        statHtml.innerHTML = str+"<br><br>"+explanation;
+                    }
+                    else if(otherQuestionType == "control_radio"){
+                        var tempArr = [];
+                        for(var key in givenSubmissions){
+                            if(givenSubmissions[key][2] in tempArr){
+                                tempArr[givenSubmissions[key][2]]++;
+                            }
+                            else{
+                                tempArr[givenSubmissions[key][2]] = 1;
+                            }
+                        }
+                        
+                        var str = "<canvas id=\"myOtherChart\" width=\"400\" height=\"400\" style=\"margin:0 auto;\"></canvas>";
+                        
+                        var otherKeyArr = [];
+                        var otherValArr = [];
+
+                        for(var key in tempArr){
+                            otherKeyArr.push(key);
+                            otherValArr.push(tempArr[key]);
+                        }
+
+                        if(myOtherChart != null){
+                            myOtherChart.destroy();
+                        }
+
+
+                        statHtml.innerHTML = str+"<br><br>"+explanation;
+
+                        
+                        var ctxPieOther = document.getElementById("myOtherChart").getContext('2d');
+                                        myOtherChart = new Chart(ctxPieOther, {
+                                            type: 'doughnut',
+                                            data: {
+                                                labels: otherKeyArr,
+                                                datasets: [{
+                                                backgroundColor: [
+                                                    "rgb(255, 99, 132)",
+                                                    "rgb(75, 192, 192)",
+                                                    "rgb(54, 162, 235)",
+                                                    "rgb(153, 102, 255)",
+                                                    "rgb(255, 205, 86)",
+                                                    "rgb(231,233,237)",
+                                                    "rgb(255, 159, 64)"
+                                                ],
+                                                data: otherValArr
+                                                }]
+                                            },
+                                            options: {
+                                                responsive: false,
+                                                        legend: {
+                                                            labels: {
+                                                                fontColor: 'white'
+                                                            }
+                                                        }
+                                                    }
+                                        });
+
+                        
+                    }
+                    else if(otherQuestionType == "control_checkbox"){
+                        var tempArr = [];
+
+                        for(var key in givenSubmissions){
+                            for(var key2 in givenSubmissions[key][2]){
+                                if(givenSubmissions[key][2][key2] in tempArr){
+                                    tempArr[givenSubmissions[key][2][key2]]++;
+                                }
+                                else{
+                                    tempArr[givenSubmissions[key][2][key2]] = 1;
+                                }
+
+                            }
+                            
+                        }
+                        
+                        var str = "<canvas id=\"myOtherChartMC\" width=\"400\" height=\"400\" style=\"margin:0 auto;\"></canvas>";
+                        
+                        var otherKeyArr = [];
+                        var otherValArr = [];
+
+                        for(var key in tempArr){
+                            otherKeyArr.push(key);
+                            otherValArr.push(tempArr[key]);
+                        }
+
+                        if(myOtherChartMC != null){
+                            myOtherChartMC.destroy();
+                        }
+
+
+                        statHtml.innerHTML = str+"<br><br>"+explanation;
+
+                        //console.log(otherKeyArr);
+                        //console.log(otherValArr);
+                        //console.log(givenSubmissions);
+                        var ctxPieOtherMC = document.getElementById("myOtherChartMC").getContext('2d');
+                                        myOtherChartMC = new Chart(ctxPieOtherMC, {
+                                            type: 'doughnut',
+                                            data: {
+                                                labels: otherKeyArr,
+                                                datasets: [{
+                                                backgroundColor: [
+                                                    "rgb(255, 99, 132)",
+                                                    "rgb(75, 192, 192)",
+                                                    "rgb(54, 162, 235)",
+                                                    "rgb(153, 102, 255)",
+                                                    "rgb(255, 205, 86)",
+                                                    "rgb(231,233,237)",
+                                                    "rgb(255, 159, 64)"
+                                                ],
+                                                data: otherValArr
+                                                }]
+                                            },
+                                            options: {
+                                                responsive: false,
+                                                        legend: {
+                                                            labels: {
+                                                                fontColor: 'white'
+                                                            }
+                                                        }
+                                                    }
+                                        });
+
+                    }
+                    else if(otherQuestionType == "control_fullname"){
+                        var str = "";
+                        str += "<input style=\"margin:0 auto;width:400px;\" class=\"w3-input\" type=\"text\" id=\"searchBar\" onkeyup=\"searchInTable()\" placeholder=\"Search for last names...\"><br>";
+                        str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
+                        str += "<tr><th>"+ "Last" +"</th> <th>"+ "First" +"</th> </tr>";
+                        for(var key in givenSubmissions){
+                            str += "<tr> <td>"+ givenSubmissions[key][2]["last"] +"</td> <td>"+ givenSubmissions[key][2]["first"] +"</td> </tr>";
+                        }
+                        str += "</table>";
+
+                        statHtml.innerHTML = str+"<br><br>"+explanation;
+                    }
+                    else if(otherQuestionType == "control_address"){
+                        var str = "";
+                        str += "<input style=\"margin:0 auto;width:400px;\" class=\"w3-input\" type=\"text\" id=\"searchBar\" onkeyup=\"searchInTable()\" placeholder=\"Search for address detail...\"><br>";
+                        str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
+                        str += "<tr><th>"+ "Address" +"</th> </tr>";
+                        for(var key in givenSubmissions){
+                            str += "<tr> <td>"+ givenSubmissions[key][2]["addr_line1"] + "<br>" +givenSubmissions[key][2]["addr_line2"]+"<br>"+givenSubmissions[key][2]["city"]+" "+givenSubmissions[key][2]["country"]+"<br>"+givenSubmissions[key][2]["postal"]+" "+givenSubmissions[key][2]["state"]+"</td> </tr>";
+                        }
+                        str += "</table>";
+
+                        statHtml.innerHTML = str+"<br><br>"+explanation;
+                    }
+                    else if(otherQuestionType == "control_phone"){
+                        var str = "";
+                        str += "<input style=\"margin:0 auto;width:400px;\" class=\"w3-input\" type=\"text\" id=\"searchBar\" onkeyup=\"searchInTable()\" placeholder=\"Search for phone...\"><br>";
+                        str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
+                        str += "<tr><th>"+ "Phone Number" +"</th> </tr>";
+                        for(var key in givenSubmissions){
+                            str += "<tr> <td>"+ givenSubmissions[key][2]["area"]+" "+givenSubmissions[key][2]["phone"]+"</td>"+"</tr>";
+                        }
+                        str += "</table>";
+
+                        statHtml.innerHTML = str+"<br><br>"+explanation;
+                    }
+                }
+                function searchInTable() {
+                    //W3 method
+                    var input, filter, table, tr, td, i, txtValue;
+                    input = document.getElementById("searchBar");
+                    filter = input.value.toUpperCase();
+                    table = document.getElementById("table");
+                    tr = table.getElementsByTagName("tr");
+                    for (i = 0; i < tr.length; i++) {
+                        td = tr[i].getElementsByTagName("td")[0];
+                        if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                        }       
+                    }
+                }
+            
             </script>
       
             
-
-        </div>
-        <div style="width:6%;height:auto;">
-
-        </div>
-        <div class="orangecolumn" style="width:41%;height:auto;">
-            <h2 class="questionHeader" style="color:black;"> {{ otherQuestion[1] }} </h2>
-            <p class="questionHeader" style="color:black;"> {{ otherQuestionType }} </p>
-
 
         </div>
         <div style="width:6%;height:auto;">

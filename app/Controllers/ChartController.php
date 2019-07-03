@@ -21,12 +21,14 @@ class ChartController{
         $forms = $this->jotformAPI->getForms();
        
         foreach($forms as $f){
-            if($f["title"] == "Test"){
+            if($f["title"] == "Job Application"){
                 $this->form = $f;
             }
         }
+
        
         $this->submissions = $this->jotformAPI->getFormSubmissions($this->form["id"]);
+
     }
 
     public function questionChoice($request,$response,$args){
@@ -56,8 +58,7 @@ class ChartController{
             array_push($submissionArr,array($s["created_at"],$s["answers"][$qid]["answer"],$s["id"]));
         }
 
-        $question = array($questionJSON["qid"],$questionJSON["text"],$this->giveOptionsArray($questionJSON["options"]));
-        
+        $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         return $this->c->view->render($response,"designed/index.twig",compact("submissionArr","question"));
     }
 
@@ -72,7 +73,7 @@ class ChartController{
             array_push($submissionArr,array($s["created_at"],$s["answers"][$qid]["answer"],$s["id"]));
         }
 
-        $question = array($questionJSON["qid"],$questionJSON["text"],$this->giveOptionsArray($questionJSON["options"]));
+        $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         
         return $this->c->view->render($response,"designed/time_basis.twig",compact("question","submissionArr"));
     }
@@ -89,12 +90,13 @@ class ChartController{
         $otherQuestionType = $otherQuestionJSON["type"];
 
         $submissionArr = $this->getAuxSubmissionArr($qid,$otherQid);
-        
 
-        $question = array($questionJSON["qid"],$questionJSON["text"],$this->giveOptionsArray($questionJSON["options"]));
-        $otherQuestion = array($otherQuestionJSON["qid"],$otherQuestionJSON["text"],$otherQuestionJSON["type"]);
-        
-        return $this->c->view->render($response,"designed/related_stats.twig",compact("submissionArr","question","otherQuestion"));
+        $formID = $this->form["id"];
+
+        $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
+        $otherQuestion = array($otherQuestionJSON["qid"],str_ireplace("'","",$otherQuestionJSON["text"]),$otherQuestionJSON["type"]);
+
+        return $this->c->view->render($response,"designed/related_stats.twig",compact("submissionArr","question","otherQuestion","formID"));
     }
 
     public function getAuxSubmissionArr($mcQid,$otherQid){
@@ -105,8 +107,10 @@ class ChartController{
 
             ***Problem with apostrophe in JSON
         */
+        
         foreach($this->submissions as $s){
             if(array_key_exists("answer",$s["answers"][$otherQid])){
+                echo "hey";
                 if(array_key_exists("answer",$s["answers"][$mcQid])){
                     $s["answers"][$otherQid]["answer"] = str_ireplace("'","",$s["answers"][$otherQid]["answer"]);
                     array_push($compactArr,array($s["created_at"],$s["answers"][$mcQid]["answer"],$s["answers"][$otherQid]["answer"],$s["id"]));

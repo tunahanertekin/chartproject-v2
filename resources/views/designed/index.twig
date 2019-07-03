@@ -117,6 +117,9 @@
             keyarr.push(key);
             valarr.push(associativeStat[key]);
           }
+
+          //console.log(options);
+
           document.getElementById("chartPlace").innerHTML="<canvas id=\"myPieChart\" width=\"400\" height=\"400\"></canvas>";
           drawChart(keyarr,valarr);
         }
