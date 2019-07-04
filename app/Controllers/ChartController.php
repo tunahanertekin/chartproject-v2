@@ -41,7 +41,9 @@ class ChartController{
             if($q["type"] == "control_checkbox"){
                 array_push($infoArr,array($q["qid"],$q["text"]));
             }
-            array_push($allQuestions,array($q["qid"],$q["text"]));
+            if($q["type"] != "control_button" && $q["type"] != "control_head"){
+                array_push($allQuestions,array($q["qid"],$q["text"]));
+            }
         }
 
         return $this->c->view->render($response,"designed/choice_page.twig",compact("infoArr","allQuestions"));
@@ -49,7 +51,7 @@ class ChartController{
 
     public function index($request,$response,$args){
         
-        $qid = $request->getParam("question");
+        $qid = $args["mcq"];
         $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
 
         $submissionArr = array();
@@ -64,7 +66,7 @@ class ChartController{
 
     public function timeBasis($request,$response,$args){
         
-        $qid = $request->getParam("question");
+        $qid = $args["mcq"];
         $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
 
         $submissionArr = array();
@@ -79,12 +81,13 @@ class ChartController{
     }
 
     public function relatedStats($request,$response,$args){
-        $qid = $request->getParam("question");
+
+        $qid = $args["mcq"];
         $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
 
         $questionNumber = sizeof($this->jotformAPI->getFormQuestions($this->form["id"]));
 
-        $otherQid = $request->getParam("otherQuestion");
+        $otherQid = $args["oq"];
         $otherQuestionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$otherQid);
 
         $otherQuestionType = $otherQuestionJSON["type"];
@@ -105,7 +108,7 @@ class ChartController{
             It is convenient for 
             all basic form elements.
 
-            ***Problem with apostrophe in JSON
+            ***Problem with apostrophe in JSON parsing!
         */
         
         foreach($this->submissions as $s){

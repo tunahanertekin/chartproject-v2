@@ -55,19 +55,20 @@ $app->group('/jotcharts',function(){
     
     $this->get('',ChartController::class.":questionChoice");
         
-    $this->group('/index',function(){
-        $this->post('',ChartController::class.":index");
+    $this->group('/{formID}',function(){
+        $this->group('/bar-radar',function(){
+            $this->get('/{mcq}',ChartController::class.":index");
+            $this->post('/{mcq}',ChartController::class.":index");
+        });
+        $this->group('/time-basis',function(){
+            $this->get('/{mcq}',ChartController::class.":timeBasis");
+            $this->post('/{mcq}',ChartController::class.":timeBasis");
+        });
+        $this->group('/related-stats/{mcq}/{oq}',function(){
+            $this->get('',ChartController::class.":relatedStats");
+            $this->post('',ChartController::class.":relatedStats");
+        });
     });
-
-    $this->group('/time-basis',function(){
-        $this->get('',ChartController::class.":timeBasis");
-        $this->post('',ChartController::class.":timeBasis");
-    });
-
-    $this->group('/related-stats',function(){
-        $this->get('',ChartController::class.":relatedStats");
-        $this->post('',ChartController::class.":relatedStats");
-    });
+    
    
 });
-

@@ -3,6 +3,11 @@
 
 {% block content %}
 
+    {% set formID = "91834456501962" %}
+    <script>
+        var formID = '{{formID}}';
+    </script>
+
     <div class="row" style="height:25px;">
 
     </div>
@@ -14,130 +19,382 @@
         </div>
 
         <div class="column" style="width:92%;height:500px;">
-
             <h2 class="questionHeader" style="font-weight:bold;border-radius:7px;background-color:orange;color:black;">JotCharts</h2>
             <p class="questionHeader"> for Multiple Choice Form Elements </p>
-
-            <button id="btn1" onclick="showIndexForm()" class="button" style="width:400px;">Use Option/Date Filters and Compare Time Periods</button>
-            <br><br>
-            <button id="btn2" onclick="showTimeForm()" style="width:400px;" class="button">Timely Basis Statistics</button>
-            <br><br>
-            <button id="btn3" onclick="showRelatedForm()" style="width:400px;" class="button">Related Statistics(With Other Form Questions)</button>
             
-            <script>
-                function showIndexForm(){
-                    var element = document.getElementById("indexForm");
-                    if(element.style.display != "none"){
-                        element.style.display = "none";;
+            <div class="row">
 
-                        document.getElementById("btn2").style.display = "inline-block";
-                        document.getElementById("btn3").style.display = "inline-block";
-                    } 
-                    else{
-                        element.style.display = "block";
+                <div style="width:46%;">
 
-                        document.getElementById("btn2").style.display = "none";
-                        document.getElementById("btn3").style.display = "none";
-                    }
-                }
+                    <br><br><br>
 
-                function showTimeForm(){
-                    var element = document.getElementById("timeForm");
-                    if(element.style.display != "none"){
-                        element.style.display = "none";
+                    <button id="btn1" onclick="showIndexForm()" class="button" style="width:400px;">Use Option/Date Filters and Compare Time Periods</button>
+                    <br><br>
+                    <button id="btn2" onclick="showTimeForm()" style="width:400px;" class="button">Timely Basis Statistics</button>
+                    <br><br>
+                    <button id="btn3" onclick="showRelatedForm()" style="width:400px;" class="button">Related Statistics(With Other Form Questions)</button>
+                    
+                    <script>
+                        function drawExampleChart(type){
+                            if(type == "bar-radar"){
+                                drawBarRadar();
+                            }
+                            else if(type == "timely-basis"){
+                                drawLineChart();
+                            }
+                            else if(type == "related-stats"){
+                                drawRelatedChart();
+                            }
 
-                        document.getElementById("btn1").style.display = "inline-block";
-                        document.getElementById("btn3").style.display = "inline-block";
-                    } 
-                    else{
-                        element.style.display = "block";
+                        }
 
-                        document.getElementById("btn1").style.display = "none";
-                        document.getElementById("btn3").style.display = "none";
-                    }
-                }
+                        function drawRelatedChart(){
+                            document.getElementById("right1").innerHTML = "<canvas style=\"display:block;margin:0 auto;\" id=\"exampleDoughnutChart\" width=\"200\" height=\"200\"></canvas>";
+                            document.getElementById("right2").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\"> List emails of people who has a platypus! </font><br> Put no limits to your specifications! Reach other form questions' statistics scoped by one answer. </p>";
+                            document.getElementById("right3").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">I want that submission on my desk!</font><br> Go inbox and see the submission you want. JotCharts will help you to find the right submission. </p>";                            
+                            document.getElementById("right4").innerHTML = "<br><table style=\"margin:0 auto;font-size:14px;width:200px;\" class=\"dataTable\"><tr> <th>Emails</th> </tr> <tr> <td> flymetothemoon@xmail.com </td> </tr>  <tr> <td> andletmeplay@xahoo.com </td> </tr>  <tr> <td> amongthestars@xmail.com </td> </tr></table>";
+                            
+                            var ctxDoughnut = document.getElementById("exampleDoughnutChart");
+                            var myDoughnutChart = new Chart(ctxDoughnut,{
+                                type: 'doughnut',
+                                data: {
+                                labels: ["A","B","C"],
+                                datasets: [
+                                    {
+                                    label: "Value",
+                                    backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+                                    data: [2478,5267,734]
+                                    }
+                                ]
+                                },
+                                options: {
+                                    responsive: false
+                                }
+                            });
+                        }
 
-                function showRelatedForm(){
-                    var element = document.getElementById("relatedForm");
-                    if(element.style.display != "none"){
-                        element.style.display = "none";
+                        function drawLineChart(){
+                            document.getElementById("right2").innerHTML = "<canvas style=\"display:block;margin:0 auto;\" id=\"exampleLineChart\" width=\"200\" height=\"200\"></canvas>";
+                            document.getElementById("right1").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">See the effects of planetary movements of Venus on your submitters.</font><br> You can investigate certain time statistics of your form using JotCharts. </p>";
+                            document.getElementById("right4").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">Queue up!</font><br> Classify your submissions based on time. </p>";                            
+                            document.getElementById("right3").innerHTML = "<canvas style=\"margin:0 auto;\" id=\"examplePolarChart\" width=\"200\" height=\"200\"></canvas>";
+                            
+                            var ctxLine = document.getElementById("exampleLineChart");
+                            var myLineChart = new Chart(ctxLine,{
+                                type: 'line',
+                                data: {
+                                    labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
+                                    datasets: [{ 
+                                        data: [86,114,106,106,107,111,133,221,783,2478],
+                                        label: "A",
+                                        borderColor: "#3e95cd",
+                                        fill: false
+                                    }, { 
+                                        data: [282,350,411,502,635,809,947,1402,3700,5267],
+                                        label: "B",
+                                        borderColor: "#8e5ea2",
+                                        fill: false
+                                    }
+                                    ]
+                                },
+                                options: {
+                                    responsive:false
+                                }
+                            });
 
-                        document.getElementById("btn1").style.display = "inline-block";
-                        document.getElementById("btn2").style.display = "inline-block";
-                    } 
-                    else{
-                        element.style.display = "block";
+                            var ctxPolar = document.getElementById("examplePolarChart");
+                            var myPolarChart = new Chart(ctxPolar, {
+                                type: 'polarArea',
+                                data: {
+                                labels: ["A","B","C"],
+                                datasets: [
+                                    {
+                                    label: "Population (millions)",
+                                    backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f"],
+                                    data: [2478,5267,734]
+                                    }
+                                ]
+                                },
+                                options: {
+                                    responsive:false,
+                                }
+                            });
+                        }
 
-                        document.getElementById("btn1").style.display = "none";
-                        document.getElementById("btn2").style.display = "none";
-                    }
-                }
-            </script>
-            <form style="display:none" id="indexForm" method="POST" action="/public/jotcharts/index">
-                <br>
-                <select name="question">
+                        function drawBarRadar(){
+                            document.getElementById("right1").innerHTML = "<canvas style=\"display:block;margin:0 auto;\" id=\"examplePieChart\" width=\"200\" height=\"200\"></canvas>";
+                            document.getElementById("right2").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">Do people who like jazz music also like hiking?</font><br> You can specify your results and analyse using JotCharts filters. Use option and date filter to reach detailed statistics of your submissions.</p>";
+                            document.getElementById("right3").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">Is \"March Madness\" real?</font><br> Radar chart is to help you compare data from different time periods. </p>";                            
+                            document.getElementById("right4").innerHTML = "<canvas style=\"margin:0 auto;\" id=\"exampleRadarChart\" width=\"200\" height=\"200\"></canvas>";
+                            
+                            var ctxPie = document.getElementById("examplePieChart").getContext('2d');
+                            var myPieChart = new Chart(ctxPie, {
+                                type: 'pie',
+                                data: {
+                                    labels: ["Awesome", "Astonishing", "Perfect", "Genius"],
+                                    datasets: [{
+                                    backgroundColor: [
+                                        "rgb(255, 99, 132)",
+                                        "rgb(75, 192, 192)",
+                                        "rgb(54, 162, 235)",
+                                        "rgb(153, 102, 255)",
+                                        "rgb(255, 205, 86)",
+                                        "rgb(231,233,237)",
+                                        "rgb(255, 159, 64)"
+                                    ],
+                                    data: [3,4,3,1,7]
+                                    }]
+                                },
+                                options: {
+                                    title: {
+                                        text: "Define JotForm.",
+                                        display: true
+                                    },
+                                    responsive: false,
+                                            legend: {
+                                                labels: {
+                                                    fontColor: 'white'
+                                                }
+                                            }
+                                        }
+                            });
+                            var ctxRadar = document.getElementById("exampleRadarChart");
+                            var myRadarChart = new Chart(ctxRadar, {
+                                type: 'radar',
+                                data: {
+                                labels: ["Awesome", "Astonishing", "Perfect", "Genius"],
+                                datasets: [
+                                    {
+                                    label: "Guests",
+                                    fill: true,
+                                    backgroundColor: "rgba(179,25,198,0.2)",
+                                    borderColor: "rgba(179,181,198,1)",
+                                    pointBorderColor: "white",
+                                    pointBackgroundColor: "rgba(179,181,198,1)",
+                                    data: [12,4,6,7,2]
+                                    }, {
+                                    label: "Users",
+                                    fill: true,
+                                    backgroundColor: "rgba(100,192,132,0.2)",
+                                    borderColor: "rgba(255,99,132,1)",
+                                    pointBorderColor: "white",
+                                    pointBackgroundColor: "rgba(255,99,132,1)",
+                                    pointBorderColor: "#fff",
+                                    data: [4,8,4,7,9]
+                                    }
+                                ]
+                                },
+                                options: {
+                                    responsive: false,
+                                    scale: {
+                                        angleLines: {
+                                            display: true,
+                                            color: "white"
+                                        },
+                                        ticks: {
+                                        min: 0,
+                                        max: 12
+                                        }
+                                    }
+                                }
+                            });
 
-                    {% for info in infoArr %}
-                        <option value="{{info[0]}}"> {{ info[1] }} </option>
-                    {% endfor %}
+                        }
 
-                </select>
+                        function defaultChartArea(){
+                            document.getElementById("right1").innerHTML = "";
+                            document.getElementById("right2").innerHTML = "";
+                            document.getElementById("right3").innerHTML = "";
+                            document.getElementById("right4").innerHTML = "";
+                        }
 
-                <br><br>
-                <button class="button">Select</button>
-            
-            </form>
+                        function showIndexForm(){
+                            var element = document.getElementById("indexForm");
+                            if(element.style.display != "none"){
+                                element.style.display = "none";;
 
-            <br>
+                                defaultChartArea();
 
-            <form style="display:none;" id="timeForm" action="/public/jotcharts/time-basis" method="POST">
-            
-                <br>
-                <select name="question">
+                                document.getElementById("btn2").style.display = "inline-block";
+                                document.getElementById("btn3").style.display = "inline-block";
+                            } 
+                            else{
+                                element.style.display = "block";
+                                updateIndexQuestion();
 
-                    {% for info in infoArr %}
-                        <option value="{{info[0]}}"> {{ info[1] }} </option>
-                    {% endfor %}
+                                drawExampleChart("bar-radar");
 
-                </select>
+                                document.getElementById("btn2").style.display = "none";
+                                document.getElementById("btn3").style.display = "none";
+                            }
+                        }
 
-                <br><br>
-                <button class="button">Select</button>
-            
-            </form>
+                        function showTimeForm(){
+                            var element = document.getElementById("timeForm");
+                            if(element.style.display != "none"){
+                                element.style.display = "none";
 
-            <form style="display:none;" id="relatedForm" method="POST" action="/public/jotcharts/related-stats">
-                
-                <br>
-                <div style="color:white;">
-                    Target Question&nbsp&nbsp&nbsp&nbspMC Question&nbsp&nbsp&nbsp&nbsp&nbsp
+                                defaultChartArea();
+
+                                document.getElementById("btn1").style.display = "inline-block";
+                                document.getElementById("btn3").style.display = "inline-block";
+                            } 
+                            else{
+                                element.style.display = "block";
+                                updateTimeQuestion();
+
+                                drawExampleChart("timely-basis");
+
+                                document.getElementById("btn1").style.display = "none";
+                                document.getElementById("btn3").style.display = "none";
+                            }
+                        }
+
+                        function showRelatedForm(){
+                            var element = document.getElementById("relatedForm");
+                            if(element.style.display != "none"){
+                                element.style.display = "none";
+
+                                defaultChartArea();
+
+                                document.getElementById("btn1").style.display = "inline-block";
+                                document.getElementById("btn2").style.display = "inline-block";
+                            } 
+                            else{
+                                element.style.display = "block";
+                                updateQuestions();
+
+                                drawExampleChart("related-stats");
+
+                                document.getElementById("btn1").style.display = "none";
+                                document.getElementById("btn2").style.display = "none";
+                            }
+                        }
+                    </script>
+                    <div style="display:none;" id="indexForm">
+                        <br>
+                        <select id="indexID" onchange="updateIndexQuestion()" name="question">
+
+                            {% for info in infoArr %}
+                                <option value="{{info[0]}}"> {{ info[1] }} </option>
+                            {% endfor %}
+
+                        </select>
+
+                        <br><br>
+                        <script>
+                        
+                        function updateIndexQuestion(){
+                            var mcq = document.getElementById("indexID").value;
+                            document.getElementById("indexSubmit").innerHTML = "<a style=\"border:1px solid white;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/bar-radar/"+mcq+"\">Select</a>"
+                        }
+                    
+                        </script> 
+
+                        <div id="indexSubmit">
+
+                        </div>
+                    
+                    </div>
+
+                    <br>
+
+                    <div style="display:none;" id="timeForm">
+                    
+                        <br>
+                        <select onchange="updateTimeQuestion()" id="timeID" name="question">
+
+                            {% for info in infoArr %}
+                                <option value="{{info[0]}}"> {{ info[1] }} </option>
+                            {% endfor %}
+
+                        </select>
+                        <script>
+                        
+                            function updateTimeQuestion(){
+                                var mcq = document.getElementById("timeID").value;
+                                document.getElementById("timeSubmit").innerHTML = "<a style=\"border:1px solid white;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/time-basis/"+mcq+"\">Select</a>"
+                            }
+                        
+                        </script>
+                        
+                        <br><br>
+                        <div id="timeSubmit">
+                            
+                        </div>
+                        
+                    
+                    </div>
+
+                    <div style="display:none;" id="relatedForm" >
+                        
+                        <br>
+                        <div style="color:white;">
+                            Target Question&nbsp&nbsp&nbsp&nbspMC Question&nbsp&nbsp&nbsp&nbsp&nbsp
+                        </div>
+                        
+                        <select onchange="updateQuestions()" id="otherq" name="otherQuestion" style="width:200px;">
+
+                            {% for q in allQuestions %}
+                                <option value="{{q[0]}}"> {{ q[1] }} </option>
+                            {% endfor %}
+
+                        </select>
+                        &nbsp
+                        <select onchange="updateQuestions()" id="mcq" name="question" style="width: 200px;">
+
+                            {% for info in infoArr %}
+                                <option value="{{info[0]}}"> {{ info[1] }} </option>
+                            {% endfor %}
+
+                        </select>
+                        
+
+                        <br><br>
+                        
+                        <script>
+                            
+                            function updateQuestions(){
+                                var mcq = document.getElementById("mcq").value;
+                                var otherq = document.getElementById("otherq").value;
+                                document.getElementById("relatedSubmit").innerHTML = "<a style=\"border:1px solid white;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/related-stats/"+mcq+"/"+otherq+"\">Select</a>"
+                            }
+                        
+                        </script>
+                        <div id="relatedSubmit">
+                            
+                        </div>
+                        
+                    </div>
+
                 </div>
-                
-                <select name="otherQuestion" style="width:200px;">
+                <div style="width:46%;">
+                    <div>
+                        <div class="row">
 
-                    {% for q in allQuestions %}
-                        <option value="{{q[0]}}"> {{ q[1] }} </option>
-                    {% endfor %}
+                            <div id="right1" style="width:50%">
 
-                </select>
-                &nbsp
-                <select name="question" style="width: 200px;">
+                            </div>
 
-                    {% for info in infoArr %}
-                        <option value="{{info[0]}}"> {{ info[1] }} </option>
-                    {% endfor %}
+                            <div id="right2" style="width:50%">
 
-                </select>
-                 
+                            </div>
 
-                
-                
+                        </div>
+                        <div class="row">
 
-                <br><br>
-                <button class="button">Select</button>
-                
-            </form>
+                            <div id="right3" style="width:50%">
 
+                            </div>
+
+                            <div id="right4" style="width:50%">
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div style="width: 4%">
@@ -145,9 +402,7 @@
         </div>
 
     </div>
-    
-
-
+ 
 
 
 {% endblock %}
