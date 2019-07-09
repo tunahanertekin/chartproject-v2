@@ -8,21 +8,20 @@
   </div>
 
   <div class="row">
-    
+  
     <div style="width: 4%;">
 
 
     </div>
 
 
-    <div class="column" style="background-color:#aaa;color:#f38d30;height:700px;width:30%;">
-      <br><br>
-      <div>
-        <h2 class="questionHeader">
-          {{ question[1] }}
-        </h2>
-      </div>
+    <div class="styledColumn" style="background-color:#aaa;height:auto;width:30%;">
       
+      
+      <h2 class="altHeader">
+        Multiple Choice Question
+      </h2>
+        
       <div id="chartPlace">
       <br><br><br>
       Specify your results using "Filters" section.
@@ -136,13 +135,13 @@
                                 labels: keyarr,
                                 datasets: [{
                                 backgroundColor: [
-                                    "rgb(255, 99, 132)",
-                                    "rgb(75, 192, 192)",
-                                    "rgb(54, 162, 235)",
-                                    "rgb(153, 102, 255)",
-                                    "rgb(255, 205, 86)",
-                                    "rgb(231,233,237)",
-                                    "rgb(255, 159, 64)"
+                                    "rgb(255, 99, 132,.5)",
+                                    "rgb(75, 192, 192,.5)",
+                                    "rgb(54, 162, 235,.5)",
+                                    "rgb(153, 102, 255,.5)",
+                                    "rgb(255, 205, 86,.5)",
+                                    "rgb(231,233,237,.5)",
+                                    "rgb(255, 159, 64,.5)"
                                 ],
                                 data: valarr
                                 }]
@@ -236,19 +235,22 @@
 
 
 
-    <div class="orangecolumn" style="background-color:#bbb;height:700px;width:30%;">
-      <br><br>
+    <div class="styledColumnv2" style="height:auto;width:30%;">
       
-      <h2 class="questionHeader" style="color:black;">Filters</h2>
+      
+      <h2 class="altHeaderv2">Filters</h2>
+      <p style="color:black;" class="questionHeader">
+          {{ question[1] }}
+      </p>
 
-      <br><br>
-      <div class="formType">
+      <br>
+      
         {% set options = question[2] %}
-        <br>
 
-        <div style="font-style: italic;">
+        <div style="color:#dc3545;font-style: italic;">
           Option scope:
         </div>
+        
 
         {% for opt in options %}
             <input type="checkbox" onclick="assignAndDraw()" name="check" id="{{opt}}"> {{ opt }} <br>
@@ -256,7 +258,7 @@
 
         <br>
 
-          <div style="font-style: italic;">
+          <div style="color:#dc3545;font-style: italic;">
             Between Dates: 
           </div>
           <input name="betweendates" type="date" onchange="assignAndDraw()">
@@ -265,7 +267,9 @@
 
         <br><br>
         <button class="button" onclick="assignAndDraw()">See Chart</button>
-        </div>
+        <br>
+        <br><br>
+        
     </div>
     
     <div style="width: 1%;">
@@ -273,9 +277,24 @@
 
     </div>
 
-    <div class="column" style="background-color:#ccc;color:blue;height:700px;width:30%;">
-      <br><br>
-      <h2 class="questionHeader">How it works?</h2>
+    <div class="styledColumn" style="background-color:#ccc;color:blue;height:auto;width:30%;">
+      
+      <h2 class="altHeader">How it works?</h2>
+      <br>
+      <div class="paragraphHeader">
+        Option Scope
+      </div>
+      <div class="paragraph">
+        If you put an option to scope, your submissions will be filtered so that you can see the statistics of people who selected this option.
+      </div>
+      <br>
+      <div class="paragraphHeader">
+        Between Dates
+      </div>
+      <div class="paragraph">
+        You can see the statistics of your submissions submitted in different time periods.
+      </div>
+
     </div>
 
     <div style="width: 4%;">
@@ -298,20 +317,27 @@
 
     
 
-    <div class="orangecolumn" style="background-color:#aaa;color:black;height:700px;width:30%;">
+    <div class="styledColumnv2" style="height:auto;width:30%;">
       
-      <br><br>
+      
 
-      <h2 class="questionHeader" style="color:black" >Compare Periods</h2>
+      <h2 class="altHeaderv2" >Compare Periods</h2>
+
+      <p style="color:black;" class="questionHeader">
+          {{ question[1] }}
+      </p>
      
       <br><br><br>
-
-      First Date Period: <br>
+      <font style="color:#dc3545;">First Date Period: </font>
+      <br>
       <input type="date" name="datePeriod1" onchange="setValues()"> - <input type="date" name="datePeriod1" onchange="setValues()"> <br>
-      Second Date Period: <br>
+      <font style="color:#dc3545;">Second Date Period: </font> 
+      <br>
       <input type="date" name="datePeriod2" onchange="setValues()"> - <input type="date" name="datePeriod2" onchange="setValues()">
       <br><br>
       <button class="button" onclick="setValues()">See Radar Chart</button>
+      <br>
+      <br><br>
     
     
     </div>
@@ -324,16 +350,16 @@
 
 
 
-    <div class="column" style="background-color:#bbb;height:700px;width:30%;">
-        <br><br>
+    <div class="styledColumn" style="background-color:#bbb;height:auto;width:30%;">
         
-        <h2 class="questionHeader">Radar</h2>
+        
+        <h2 class="altHeader">Radar</h2>
 
         <div id="radarChartPlace">
             <br><br><br>
-            <p style="color:orange">
+            
                 Specify your results using "Compare Periods" section.
-            </p>
+            
             
         </div>
         
@@ -516,8 +542,6 @@
         
         function drawRadar(){
 
-          //console.log("Hey");
-
           var max = 0;
           for(var key in firstValSet){
             if(firstValSet[key]>max){
@@ -570,8 +594,7 @@
                       max: max
                       }
                   }
-          }
-          
+            }
           });
         }
         
@@ -585,9 +608,17 @@
 
     </div>
 
-    <div class="orangecolumn" style="background-color:#ccc;color:blue;height:700px;width:30%;">
-      <br><br>
-      <h2 class="questionHeader" style="color:black">How it works?</h2>
+    <div class="styledColumnv2" style="height:auto;width:30%;">
+      
+      <h2 class="altHeaderv2" >How it works?</h2>
+
+      <br>
+      <div class="paragraphHeader">
+        Different Date Periods
+      </div>
+      <div class="paragraph">
+        You can compare data of two different time periods choosing specific time periods. Radar chart will help you comparing statistics.
+      </div>
 
     </div>
 

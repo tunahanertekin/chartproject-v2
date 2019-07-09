@@ -10,13 +10,13 @@
     </style>
 
     <script>
-    var months = [ "January", "February", "March", "April", "May", "June", 
-                "July", "August", "September", "October", "November", "December" ];
+        var months = [ "January", "February", "March", "April", "May", "June", 
+                    "July", "August", "September", "October", "November", "December" ];
         function getRandomColor(){
             var letters = '0123456789ABCDEF';
             var color = '#';
             for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
+                color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
         }
@@ -26,22 +26,7 @@
 
     </div>
 
-    <div class="row" style="height:50px;">
-
-        <div style="width:10%; height:50px;">
-
-        </div>
-
-        <div class="orangecolumn" style="width:80%;height:50px;">
-            <h2 class="questionHeader" style="color:black;"> {{ question[1] }} </h2>
-        </div>
-
-        <div style="width:10%;height:50px;">
-
-        </div>
-
-
-    </div>
+    
 
     <div class="row" style="height: 25px">
 
@@ -53,7 +38,11 @@
             
         </div>
 
-        <div class="orangecolumn" style="width: 80%;height:650px;">
+        <div class="styledColumn" style="width: 80%;height:auto;">
+    
+            <div class="altHeader"> {{ question[1] }} </div>
+
+            <br>
             
             <select id="statBasis" onchange="decide()">
                 <option value="monthly">Monthly</option>
@@ -164,8 +153,6 @@
                     var curDate = new Date(JSON.parse(JSON.stringify(aroundDate)));
                     var pastDate = new Date(JSON.parse(JSON.stringify(aroundDate)));
 
-                    //console.log(curDate);
-
                     dayArr = [];
 
                     for(var i=29;i>=0;i--){
@@ -175,7 +162,6 @@
                         pastDate = new Date(JSON.parse(JSON.stringify(aroundDate)));
                     }
 
-                    //console.log(dayArr);
 
                     assocArr = [];
 

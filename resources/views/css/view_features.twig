@@ -10,18 +10,51 @@
 
 
 <style>
+    
+    a{
+        text-decoration: none;
+    }
+    button{
+        text-decoration: none;
+    }
 
     .button{
-        background-color: #f38d30;
+        background-color: #ffc107;
         border-radius: 7px;
-        color:aliceblue;
+        color:#343a40;
         font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
-        
+        transition: 0.3s;
     }
 
     .button:hover{
         background-color: aliceblue;
-        color:#f38d30;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+    .styledButton{
+        background-color: #f8f9fa;
+        border-radius: 0px;
+        border: 0px solid white;
+        color:#343a40;
+        font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+        font-size: 20px;
+        border-radius: 7px;
+        transition: 0.3s;
+    }
+    .styledButton:hover{
+        background-color: #868e96;
+        color:#343a40;
+        border-radius: 7px;
+        text-align: left;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+    button:focus{
+        outline: none;
+    }
+    a:focus{
+        outline: none;
     }
 </style>
 
@@ -34,21 +67,21 @@
     }
 
     .dataTable td, .dataTable th {
-    border: 1px solid #ddd;
+    border: 1px solid #343a40;
     padding: 8px;
     }
 
-    .dataTable tr:nth-child(even){background-color: #f2f2f2;}
+    .dataTable tr:nth-child(even){background-color: #868e96;}
 
-    .dataTable tr:nth-child(odd){background-color: grey}
+    .dataTable tr:nth-child(odd){background-color: #f8f9fa}
 
-    .dataTable tr:hover {background-color: #ddd;}
+    .dataTable tr:hover {background-color: #fe8800;}
 
     .dataTable th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #f38d30;
+    background-color: #20c997;
     color: white;
     }
 </style>
@@ -70,6 +103,57 @@
         border-radius: 4px;
         border: 2px solid darkolivegreen;
         }
+
+        .styledColumn {
+            float: left;
+            padding: 0px;
+            height: 300px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            border-radius: 4px;
+            border: 2px solid #6f42c1;
+            background-color: #f8f9fa;
+        }
+
+        .styledColumnv2 {
+            float: left;
+            padding: 0px;
+            height: auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            border-radius: 4px;
+            border: 2px solid #fe8800;
+            background-color: #f8f9fa;
+        }
+
+        .glassColumn{
+            float: left;
+            padding: 0px;
+            height: auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            border-radius: 4px;
+
+        }
+        /*--blue: #007bff;
+--indigo: #6610f2;
+--purple: #6f42c1;
+--pink: #e83e8c;
+--red: #dc3545;
+--orange: #fd7e14;
+--yellow: #ffc107;
+--green: #28a745;
+--teal: #20c997;
+--cyan: #17a2b8;
+--white: #fff;
+--gray: #868e96;
+--gray-dark: #343a40;
+--primary: #007bff;
+--secondary: #868e96;
+--success: #28a745;
+--info: #17a2b8;
+--warning: #ffc107;
+--danger: #dc3545;
+--light: #f8f9fa;
+--dark: #343a40;
+        */
 
         .orangecolumn {
         float: left;
@@ -182,8 +266,27 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         color:#f38d30;
         font-style: italic;
+        
     }
-
+    .altHeader{
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        color:#ffc107;
+        font-style: italic;
+        background-color: #6f42c1;
+        border-radius: 2px;
+        font-size: 30px;
+        font-weight:bold;
+    }
+    .altHeaderv2{
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        color:#6f42c1;
+        font-style: italic;
+        background-color: #fe8800;
+        border-radius: 2px;
+        font-size: 30px;
+        font-weight:bold;
+    }
+    
 </style>
 
 <style>
@@ -198,6 +301,22 @@
     .searchStyled{
         width:400px;
         
+    }
+
+</style>
+
+<style>
+    .paragraph{
+        color: #f38d30;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-style: italic;
+        font-size:20px;
+        padding: 10px;
+    }
+    .paragraphHeader{
+        color: #dc3545;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 22px;
     }
 
 </style>
@@ -329,12 +448,53 @@ animation: AnimationNav 30s ease infinite;
 <style>
     .mybody{
         background-image: url("https://www.jotform.com/myforms3/images/themes/tile-red.jpg");
+        
     }
+    .myAltBody{
+        background-color: azure;
+        font-size: 20px;
+    }
+
+
+</style>
+
+<style>
+    .bigButton {
+	background-color:#ffffff;
+	border-radius:6px;
+
+	display:inline-block;
+	
+	color:#666666;
+	font-family:Arial;
+	
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	
+    width:100%;
+    height:90px;
+
+    transition: 0.3s;
+}
+.bigButton:hover {
+	text-decoration:none;
+	background-color: #6f42c1;
+    color:#f38d30;
+    
+    transition: 0.3s;
+}
+.bigButton:active {
+	position:relative;
+	top:1px;
+}
+
 
 </style>
 
 
-<body class="mybody">
+
+<body class="myAltbody">
     {% block style %}  {% endblock %}
 </body>
 

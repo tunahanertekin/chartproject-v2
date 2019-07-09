@@ -42,8 +42,8 @@
 
         </div>
    
-        <div class="orangecolumn" style="width:41%;height:auto;">
-            <h2 class="questionHeader" style="color:black;"> {{ otherQuestion[1] }} </h2>
+        <div class="styledColumn" style="width:41%;height:auto;">
+            <div class="altHeader" > {{ otherQuestion[1] }} </div>
             <p class="questionHeader" style="color:black;"> {{ otherQuestionType }} </p>
             <div id="otherStatArea">
 
@@ -54,8 +54,8 @@
         <div style="width:6%;height:auto;">
 
         </div>
-        <div class="orangecolumn" style="width:41%;height:auto;">
-            <h2 class="questionHeader" style="color:black;"> {{ question[1] }} </h2>
+        <div class="styledColumn" style="width:41%;height:auto;">
+            <div class="altHeader" > {{ question[1] }} </div>
             <p class="questionHeader" style="color:black;"> Multiple Choice </p>
             
             <div id="chartArea">
@@ -64,14 +64,14 @@
 
             <br>
             <div>
-                <p style="color:white;" class="questionHeader">
+                <p style="color:#343a40;" class="questionHeader">
                     Option scope:
                 </p>
                 {% for option in question[2] %}
                     <input type="checkbox" name="check" onchange="assignAndDraw()" value="{{option}}"> {{option}} <br>  
                 {% endfor %}
                 <br><br>
-                <p style="color:white;" class="questionHeader">Between:</p>
+                <p style="color:#343a40;" class="questionHeader">Between:</p>
                 <input type="date" name="betweenDates" onchange="assignAndDraw()">
                 - <input type="date" name="betweenDates" onchange="assignAndDraw()" >
 
@@ -269,7 +269,7 @@
                                             responsive: false,
                                                     legend: {
                                                         labels: {
-                                                            fontColor: 'white'
+                                                            fontColor: '#343a40'
                                                         }
                                                     }
                                                 }
@@ -296,13 +296,13 @@
 
                         if(optionFilterArr.length == 0){
                             if(fromDate.length != 0 && toDate.length == 0){
-                                explanation = "There are the submission statistics after "+fromDate+".";
+                                explanation = "There are the submission statistics after <font color=\"#28a745\">"+fromDate+"</font>.";
                             }
                             else if(fromDate.length == 0 && toDate.length != 0){
-                                explanation = "There are the submission statistics before "+toDate+".";
+                                explanation = "There are the submission statistics before <font color=\"#28a745\">"+toDate+"</font>.";
                             }
                             else if(fromDate.length != 0 && toDate.length != 0){
-                                explanation = "There are the submission statistics between "+fromDate+" and "+toDate+".";
+                                explanation = "There are the submission statistics between <font color=\"#28a745\">"+fromDate+"</font> and <font color=\"#28a745\">"+toDate+"</font>.";
                             }
                             else{
                                 explanation = "All results.<br><br>You can use filters on the section right.";
@@ -314,28 +314,28 @@
                                 for(var key in optionFilterArr){
                                     explanation += " '" +optionFilterArr[key]+"'<br> ";
                                 }
-                                explanation += "<br> in question <font color=\"white\">"+ questionName +"</font> after "+fromDate+".";
+                                explanation += "<br> in question <font color=\"#6f42c1\">"+ questionName +"</font> after <font color=\"#28a745\">"+fromDate+"</font>.";
                             }
                             else if(fromDate.length == 0 && toDate.length != 0){
                                 explanation += "There are the submission statistics of people who selected";
                                 for(var key in optionFilterArr){
                                     explanation += " '" +optionFilterArr[key]+"'<br> ";
                                 }
-                                explanation += "<br> in question <font color=\"white\">"+ questionName +"</font> before "+toDate+".";
+                                explanation += "<br> in question <font color=\"#6f42c1\">"+ questionName +"</font> before <font color=\"#28a745\">"+toDate+"</font>.";
                             }
                             else if(fromDate.length != 0 && toDate.length != 0){
                                 explanation += "There are the submission statistics of people who selected";
                                 for(var key in optionFilterArr){
                                     explanation += " '" +optionFilterArr[key]+"'<br> ";
                                 }
-                                explanation += "<br> in question <font color=\"white\">"+ questionName +"</font> between "+fromDate+" and "+toDate+".";
+                                explanation += "<br> in question <font color=\"#6f42c1\">"+ questionName +"</font> between <font color=\"#28a745\">"+fromDate+"</font> and <font color=\"#28a745\">"+toDate+"</font>.";
                             }
                             else{
                                 explanation += "There are the submission statistics of people who selected";
                                 for(var key in optionFilterArr){
                                     explanation += " <br> '" +optionFilterArr[key]+"'";
                                 }
-                                explanation += "<br> in question <font color=\"white\">"+ questionName + "</font> for all times.";
+                                explanation += "<br> in question <font color=\"#6f42c1\">"+ questionName + "</font> for all times.";
                                 
                             }
                         }
@@ -429,7 +429,7 @@
                                                 responsive: false,
                                                         legend: {
                                                             labels: {
-                                                                fontColor: 'white'
+                                                                fontColor: '#343a40'
                                                             }
                                                         }
                                                     }
@@ -495,7 +495,7 @@
                                                 responsive: false,
                                                         legend: {
                                                             labels: {
-                                                                fontColor: 'white'
+                                                                fontColor: '#343a40'
                                                             }
                                                         }
                                                     }

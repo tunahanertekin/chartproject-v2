@@ -1,0 +1,70 @@
+{% extends 'layouts/navbar.twig' %}
+
+
+{% block content %}
+
+
+    <div class="row" style="height:25px;">
+
+
+    </div>
+
+    <div class="row">
+
+        <div style="width:4%;">
+
+        </div>
+
+        <div class="styledColumn" style="width:92%;height:auto;">
+            <div class="altHeader">
+                Select A Form
+            </div>
+
+            <br>
+            <div class="questionHeader">
+                Your Forms
+            </div>
+            <br>
+
+            
+            
+            {% for form in formArr %}
+
+                <a class="bigButton" href="/public/jotcharts/{{form[0]}}">
+
+                    <div class="glassColumn" style="width:33%;">
+                        <br>
+                        <div style="float:left;font-weight: normal;font-size:12px;font-style:italic;">
+                            Modified on {{ form[3]|date("M d, Y") }}
+                        </div>
+                    </div>
+
+                    <div class="glassColumn" style="width:33%;">
+                        <font size="4px;" style="float:center;"> {{form[1]}} </font> 
+                    </div>
+
+                    <div class="glassColumn" style="width:33%;">
+                        <font style="float:right;">Submissions</font>
+                     <br> <font style="float:right;font-size:40px;"> {{ form[2] }} </font> 
+                    </div>
+
+                     
+                     
+                    </a>
+                <br>
+            
+            {% endfor %}
+            
+
+            
+
+        </div>
+
+        <div style="width:4%;">
+
+        </div>
+
+
+    </div>
+
+{% endblock %}

@@ -3,7 +3,7 @@
 
 {% block content %}
 
-    {% set formID = "91834456501962" %}
+    
     <script>
         var formID = '{{formID}}';
     </script>
@@ -18,21 +18,27 @@
 
         </div>
 
-        <div class="column" style="width:92%;height:500px;">
-            <h2 class="questionHeader" style="font-weight:bold;border-radius:7px;background-color:orange;color:black;">JotCharts</h2>
-            <p class="questionHeader"> for Multiple Choice Form Elements </p>
-            
+        <div class="styledColumn" style="width:92%;height:500px;">
+            <div class="altHeader" style="text-align:left;font-weight:bold;">&nbsp <a style="text-decoration:none;color:inherit;" href="/public/jotcharts">JotCharts </a><font style="font-weight:10;font-style:normal" size="6px;" color="#f8f9fa";>|&nbsp</font><font style="font-style:normal;font-size:14px;">for Multiple Choice Form Elements </font></div>
             <div class="row">
-
                 <div style="width:46%;">
+                    <br>
+                    <div style="font-size:25px; left: 50px; display:inline-block; " class="questionHeader">
+                        <font color="black">Form: </font>  <font color="#dc3545"> {{ formName }} </font> 
+                    </div>
+                    <br> <br>
+                    <div style="text-align:left;left:50px;display:inline-block;">
+                        
+                        <button id="btn1" onclick="showIndexForm()" class="styledButton">Option/Date Filters and Time Period Comparison</button>
+                        <br><br>
+                        <button id="btn2" onclick="showTimeForm()"  class="styledButton">Timely Basis Statistics</button>
+                        <br><br>
+                        <button id="btn3" onclick="showRelatedForm()"  class="styledButton">Related Statistics(With Other Form Questions)</button>
 
-                    <br><br><br>
+                    </div>
+                    <br>
 
-                    <button id="btn1" onclick="showIndexForm()" class="button" style="width:400px;">Use Option/Date Filters and Compare Time Periods</button>
-                    <br><br>
-                    <button id="btn2" onclick="showTimeForm()" style="width:400px;" class="button">Timely Basis Statistics</button>
-                    <br><br>
-                    <button id="btn3" onclick="showRelatedForm()" style="width:400px;" class="button">Related Statistics(With Other Form Questions)</button>
+                    
                     
                     <script>
                         function drawExampleChart(type){
@@ -49,9 +55,9 @@
                         }
 
                         function drawRelatedChart(){
-                            document.getElementById("right1").innerHTML = "<canvas style=\"display:block;margin:0 auto;\" id=\"exampleDoughnutChart\" width=\"200\" height=\"200\"></canvas>";
-                            document.getElementById("right2").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\"> List emails of people who has a platypus! </font><br> Put no limits to your specifications! Reach other form questions' statistics scoped by one answer. </p>";
-                            document.getElementById("right3").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">I want that submission on my desk!</font><br> Go inbox and see the submission you want. JotCharts will help you to find the right submission. </p>";                            
+                            document.getElementById("right1").innerHTML = "<br><canvas style=\"display:block;margin:0 auto;\" id=\"exampleDoughnutChart\" width=\"200\" height=\"200\"></canvas>";
+                            document.getElementById("right2").innerHTML = "<br><br><p style=\"font-size:18px;margin:0 auto;\" class=\"questionHeader\"><font color=\"#dc3545\"> List emails of people who has a platypus! </font><br> Put no limits to your specifications! Reach other form questions' statistics scoped by one answer. </p>";
+                            document.getElementById("right3").innerHTML = "<br><br><p style=\"font-size:18px;margin:0 auto;\" class=\"questionHeader\"><font color=\"#dc3545\">I want that submission on my desk!</font><br> Go inbox and see the submission you want. JotCharts will help you to find the right submission. </p>";                            
                             document.getElementById("right4").innerHTML = "<br><table style=\"margin:0 auto;font-size:14px;width:200px;\" class=\"dataTable\"><tr> <th>Emails</th> </tr> <tr> <td> flymetothemoon@xmail.com </td> </tr>  <tr> <td> andletmeplay@xahoo.com </td> </tr>  <tr> <td> amongthestars@xmail.com </td> </tr></table>";
                             
                             var ctxDoughnut = document.getElementById("exampleDoughnutChart");
@@ -74,9 +80,9 @@
                         }
 
                         function drawLineChart(){
-                            document.getElementById("right2").innerHTML = "<canvas style=\"display:block;margin:0 auto;\" id=\"exampleLineChart\" width=\"200\" height=\"200\"></canvas>";
-                            document.getElementById("right1").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">See the effects of planetary movements of Venus on your submitters.</font><br> You can investigate certain time statistics of your form using JotCharts. </p>";
-                            document.getElementById("right4").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">Queue up!</font><br> Classify your submissions based on time. </p>";                            
+                            document.getElementById("right2").innerHTML = "<br><canvas style=\"display:block;margin:0 auto;\" id=\"exampleLineChart\" width=\"200\" height=\"200\"></canvas>";
+                            document.getElementById("right1").innerHTML = "<br><p style=\"font-size:18px;margin:0 auto;\" class=\"questionHeader\"><font color=\"#dc3545\">See the effects of planetary movements of Venus on your submitters.</font><br> You can investigate certain time statistics of your form using JotCharts. </p>";
+                            document.getElementById("right4").innerHTML = "<br><br><p style=\"font-size:18px;margin:0 auto;\" class=\"questionHeader\"><font color=\"#dc3545\">Queue up!</font><br> Classify your submissions based on time. </p>";                            
                             document.getElementById("right3").innerHTML = "<canvas style=\"margin:0 auto;\" id=\"examplePolarChart\" width=\"200\" height=\"200\"></canvas>";
                             
                             var ctxLine = document.getElementById("exampleLineChart");
@@ -122,9 +128,9 @@
                         }
 
                         function drawBarRadar(){
-                            document.getElementById("right1").innerHTML = "<canvas style=\"display:block;margin:0 auto;\" id=\"examplePieChart\" width=\"200\" height=\"200\"></canvas>";
-                            document.getElementById("right2").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">Do people who like jazz music also like hiking?</font><br> You can specify your results and analyse using JotCharts filters. Use option and date filter to reach detailed statistics of your submissions.</p>";
-                            document.getElementById("right3").innerHTML = "<br><br><br><p style=\"margin:0 auto;\" class=\"questionHeader\"><font color=\"aqua\">Is \"March Madness\" real?</font><br> Radar chart is to help you compare data from different time periods. </p>";                            
+                            document.getElementById("right1").innerHTML = "<br><canvas style=\"display:block;margin:0 auto;\" id=\"examplePieChart\" width=\"200\" height=\"200\"></canvas>";
+                            document.getElementById("right2").innerHTML = "<br><p style=\"font-size:18px;margin:0 auto;\" class=\"questionHeader\"><font color=\"#dc3545\">Do people who like jazz music also like hiking?</font><br> You can specify your results and analyse using JotCharts filters. Use option and date filter to reach detailed statistics of your submissions.</p>";
+                            document.getElementById("right3").innerHTML = "<br><br><p style=\"font-size:18px;margin:0 auto;\" class=\"questionHeader\"><font color=\"#dc3545\">Is \"March Madness\" real?</font><br> Radar chart is to help you compare data from different time periods. </p>";                            
                             document.getElementById("right4").innerHTML = "<canvas style=\"margin:0 auto;\" id=\"exampleRadarChart\" width=\"200\" height=\"200\"></canvas>";
                             
                             var ctxPie = document.getElementById("examplePieChart").getContext('2d');
@@ -142,7 +148,7 @@
                                         "rgb(231,233,237)",
                                         "rgb(255, 159, 64)"
                                     ],
-                                    data: [3,4,3,1,7]
+                                    data: [3,4,5,7]
                                     }]
                                 },
                                 options: {
@@ -153,7 +159,7 @@
                                     responsive: false,
                                             legend: {
                                                 labels: {
-                                                    fontColor: 'white'
+                                                    fontColor: 'black'
                                                 }
                                             }
                                         }
@@ -169,7 +175,7 @@
                                     fill: true,
                                     backgroundColor: "rgba(179,25,198,0.2)",
                                     borderColor: "rgba(179,181,198,1)",
-                                    pointBorderColor: "white",
+                                    pointBorderColor: "black",
                                     pointBackgroundColor: "rgba(179,181,198,1)",
                                     data: [12,4,6,7,2]
                                     }, {
@@ -177,7 +183,7 @@
                                     fill: true,
                                     backgroundColor: "rgba(100,192,132,0.2)",
                                     borderColor: "rgba(255,99,132,1)",
-                                    pointBorderColor: "white",
+                                    pointBorderColor: "black",
                                     pointBackgroundColor: "rgba(255,99,132,1)",
                                     pointBorderColor: "#fff",
                                     data: [4,8,4,7,9]
@@ -189,7 +195,7 @@
                                     scale: {
                                         angleLines: {
                                             display: true,
-                                            color: "white"
+                                            color: "black"
                                         },
                                         ticks: {
                                         min: 0,
@@ -211,21 +217,23 @@
                         function showIndexForm(){
                             var element = document.getElementById("indexForm");
                             if(element.style.display != "none"){
-                                element.style.display = "none";;
+                                element.style.display = "none";
+                                
+                                makeButtonTextDefault();
 
                                 defaultChartArea();
 
-                                document.getElementById("btn2").style.display = "inline-block";
-                                document.getElementById("btn3").style.display = "inline-block";
                             } 
                             else{
                                 element.style.display = "block";
+                                makeButtonTextColored("index");
                                 updateIndexQuestion();
 
                                 drawExampleChart("bar-radar");
 
-                                document.getElementById("btn2").style.display = "none";
-                                document.getElementById("btn3").style.display = "none";
+                                document.getElementById("timeForm").style.display = "none";
+                                document.getElementById("relatedForm").style.display = "none";
+                                
                             }
                         }
 
@@ -234,19 +242,21 @@
                             if(element.style.display != "none"){
                                 element.style.display = "none";
 
-                                defaultChartArea();
+                                makeButtonTextDefault();
 
-                                document.getElementById("btn1").style.display = "inline-block";
-                                document.getElementById("btn3").style.display = "inline-block";
+                                defaultChartArea();
+                               
                             } 
                             else{
                                 element.style.display = "block";
+                                makeButtonTextColored("time");
                                 updateTimeQuestion();
 
                                 drawExampleChart("timely-basis");
 
-                                document.getElementById("btn1").style.display = "none";
-                                document.getElementById("btn3").style.display = "none";
+                                document.getElementById("indexForm").style.display = "none";
+                                document.getElementById("relatedForm").style.display = "none";
+                                
                             }
                         }
 
@@ -255,116 +265,157 @@
                             if(element.style.display != "none"){
                                 element.style.display = "none";
 
+                                makeButtonTextDefault();
+
                                 defaultChartArea();
 
-                                document.getElementById("btn1").style.display = "inline-block";
-                                document.getElementById("btn2").style.display = "inline-block";
                             } 
                             else{
                                 element.style.display = "block";
+                                makeButtonTextColored("related");
                                 updateQuestions();
 
                                 drawExampleChart("related-stats");
 
-                                document.getElementById("btn1").style.display = "none";
-                                document.getElementById("btn2").style.display = "none";
+                                document.getElementById("timeForm").style.display = "none";
+                                document.getElementById("indexForm").style.display = "none";
+                                
                             }
                         }
-                    </script>
-                    <div style="display:none;" id="indexForm">
-                        <br>
-                        <select id="indexID" onchange="updateIndexQuestion()" name="question">
 
-                            {% for info in infoArr %}
-                                <option value="{{info[0]}}"> {{ info[1] }} </option>
-                            {% endfor %}
-
-                        </select>
-
-                        <br><br>
-                        <script>
-                        
-                        function updateIndexQuestion(){
-                            var mcq = document.getElementById("indexID").value;
-                            document.getElementById("indexSubmit").innerHTML = "<a style=\"border:1px solid white;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/bar-radar/"+mcq+"\">Select</a>"
+                        function makeButtonTextColored(type){
+                            if(type == "index"){
+                                document.getElementById("btn1").style.backgroundColor="#ffc107";
+                                document.getElementById("btn2").style.backgroundColor="#f8f9fa";
+                                document.getElementById("btn3").style.backgroundColor="#f8f9fa";
+                            }
+                            else if(type == "time"){
+                                document.getElementById("btn2").style.backgroundColor="#ffc107";
+                                document.getElementById("btn1").style.backgroundColor="#f8f9fa";
+                                document.getElementById("btn3").style.backgroundColor="#f8f9fa";
+                            }
+                            else if(type == "related"){
+                                document.getElementById("btn3").style.backgroundColor="#ffc107";
+                                document.getElementById("btn2").style.backgroundColor="#f8f9fa";
+                                document.getElementById("btn1").style.backgroundColor="#f8f9fa";
+                            }
                         }
-                    
-                        </script> 
 
-                        <div id="indexSubmit">
-
-                        </div>
+                        function makeButtonTextDefault(){
+                            document.getElementById("btn3").style.backgroundColor="#f8f9fa";
+                            document.getElementById("btn2").style.backgroundColor="#f8f9fa";
+                            document.getElementById("btn1").style.backgroundColor="#f8f9fa";
+                        }
+                    </script>
                     
+                    
+                    <div class="info" style="float:center;padding:5px;display:none;" id="indexForm">
+                        
+                                <br>
+                                <div style="color:black;">
+                                    Choose a <font color="#dc3545">multiple choice question</font> in your form:
+                                </div>
+                                <select id="indexID" onchange="updateIndexQuestion()" name="question">
+        
+                                    {% for info in infoArr %}
+                                        <option value="{{info[0]}}"> {{ info[1] }} </option>
+                                    {% endfor %}
+        
+                                </select>
+        
+                                <br><br>
+                                <script>
+                                
+                                function updateIndexQuestion(){
+                                    var mcq = document.getElementById("indexID").value;
+                                    document.getElementById("indexSubmit").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/bar-radar/"+mcq+"\">Select</a>"
+                                }
+                            
+                                </script> 
+        
+                                <div id="indexSubmit">
+        
+                                </div>
+
+                        
                     </div>
 
                     <br>
 
-                    <div style="display:none;" id="timeForm">
-                    
-                        <br>
-                        <select onchange="updateTimeQuestion()" id="timeID" name="question">
+                   
 
-                            {% for info in infoArr %}
-                                <option value="{{info[0]}}"> {{ info[1] }} </option>
-                            {% endfor %}
-
-                        </select>
-                        <script>
+                    <div class="info" style="float:center;padding:5px;display:none;" id="timeForm">
                         
-                            function updateTimeQuestion(){
-                                var mcq = document.getElementById("timeID").value;
-                                document.getElementById("timeSubmit").innerHTML = "<a style=\"border:1px solid white;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/time-basis/"+mcq+"\">Select</a>"
-                            }
-                        
-                        </script>
-                        
-                        <br><br>
-                        <div id="timeSubmit">
+                                
+                                <div style="color:black;">
+                                        Choose a <font color="#dc3545">multiple choice question</font> in your form:
+                                </div>
+                                <select onchange="updateTimeQuestion()" id="timeID" name="question">
+        
+                                    {% for info in infoArr %}
+                                        <option value="{{info[0]}}"> {{ info[1] }} </option>
+                                    {% endfor %}
+        
+                                </select>
+                                <script>
+                                
+                                    function updateTimeQuestion(){
+                                        var mcq = document.getElementById("timeID").value;
+                                        document.getElementById("timeSubmit").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/time-basis/"+mcq+"\">Select</a>"
+                                    }
+                                
+                                </script>
+                                
+                                <br><br>
+                                <div id="timeSubmit">
+                                    
+                                </div>
                             
-                        </div>
                         
-                    
                     </div>
 
-                    <div style="display:none;" id="relatedForm" >
+                    <div class="info" style="display:none;float:center;padding:5px;" id="relatedForm" >
                         
-                        <br>
-                        <div style="color:white;">
-                            Target Question&nbsp&nbsp&nbsp&nbspMC Question&nbsp&nbsp&nbsp&nbsp&nbsp
-                        </div>
-                        
-                        <select onchange="updateQuestions()" id="otherq" name="otherQuestion" style="width:200px;">
+                                
+                                <div style="color:black;">
+                                    Target Question&nbsp&nbsp&nbsp&nbspMC Question&nbsp&nbsp&nbsp&nbsp&nbsp
+                                </div>
+                                
+                                <select onchange="updateQuestions()" id="otherq" name="otherQuestion" style="width:200px;">
+        
+                                    {% for q in allQuestions %}
+                                        <option value="{{q[0]}}"> {{ q[1] }} </option>
+                                    {% endfor %}
+        
+                                </select>
+                                &nbsp
+                                <select onchange="updateQuestions()" id="mcq" name="question" style="width: 200px;">
+        
+                                    {% for info in infoArr %}
+                                        <option value="{{info[0]}}"> {{ info[1] }} </option>
+                                    {% endfor %}
+        
+                                </select>
+                                
+        
+                                <br><br>
+                                
+                                <script>
+                                    
+                                    function updateQuestions(){
+                                        var mcq = document.getElementById("mcq").value;
+                                        var otherq = document.getElementById("otherq").value;
+                                        document.getElementById("relatedSubmit").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/related-stats/"+mcq+"/"+otherq+"\">Select</a>"
+                                    }
+                                
+                                </script>
+                                <div id="relatedSubmit">
+                                    
+                                </div>
+                                
 
-                            {% for q in allQuestions %}
-                                <option value="{{q[0]}}"> {{ q[1] }} </option>
-                            {% endfor %}
-
-                        </select>
-                        &nbsp
-                        <select onchange="updateQuestions()" id="mcq" name="question" style="width: 200px;">
-
-                            {% for info in infoArr %}
-                                <option value="{{info[0]}}"> {{ info[1] }} </option>
-                            {% endfor %}
-
-                        </select>
                         
-
-                        <br><br>
-                        
-                        <script>
-                            
-                            function updateQuestions(){
-                                var mcq = document.getElementById("mcq").value;
-                                var otherq = document.getElementById("otherq").value;
-                                document.getElementById("relatedSubmit").innerHTML = "<a style=\"border:1px solid white;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/related-stats/"+mcq+"/"+otherq+"\">Select</a>"
-                            }
-                        
-                        </script>
-                        <div id="relatedSubmit">
-                            
-                        </div>
-                        
+                       
                     </div>
 
                 </div>
