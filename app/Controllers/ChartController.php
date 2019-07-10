@@ -127,6 +127,7 @@ class ChartController{
         
         $formID = $args["formID"];
         $this->setFormAndSubmissions($formID);
+        $questions = $this->jotformAPI->getFormQuestions($formID);
         $qid = $args["mcq"];
         $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
         $questionNumber = sizeof($this->jotformAPI->getFormQuestions($this->form["id"]));
@@ -134,11 +135,22 @@ class ChartController{
         $otherQuestionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$otherQid);
         $otherQuestionType = $otherQuestionJSON["type"];
 
+        $mcQuestions = array();
+        $allQuestions = array();
+        foreach($questions as $q){
+            if($q["type"] == "control_checkbox"){
+                array_push($mcQuestions,array($q["qid"],$q["text"]));
+            }
+            if($q["type"] != "control_button" && $q["type"] != "control_head"){
+                array_push($allQuestions,array($q["qid"],$q["text"]));
+            }
+        }
+
         $submissionArr = $this->getAuxSubmissionArr($qid,$otherQid);
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         $otherQuestion = array($otherQuestionJSON["qid"],str_ireplace("'","",$otherQuestionJSON["text"]),$otherQuestionJSON["type"]);
 
-        return $this->c->view->render($response,"designed/related_stats.twig",compact("submissionArr","question","otherQuestion","formID"));
+        return $this->c->view->render($response,"designed/related_stats.twig",compact("mcQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
     }
 
     /*

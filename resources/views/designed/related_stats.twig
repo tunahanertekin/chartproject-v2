@@ -43,7 +43,27 @@
         </div>
    
         <div class="styledColumn" style="width:41%;height:auto;">
-            <div class="altHeader" > {{ otherQuestion[1] }} </div>
+            <div class="altHeader" > Target </div>
+
+            <br>
+            <select onchange="updateOtherQuestion()" style="color:#dc3545;text-align: center;" id="otherQuestionValue">
+                {% for q in allQuestions %}
+                    
+                    {% if otherQuestion[0] == q[0] %}
+                        <option value="{{q[0]}}" selected> {{q[1]}} </option>
+                    {% else %}
+                        <option value="{{q[0]}}"> {{q[1]}} </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            <script>
+                function updateOtherQuestion(){
+                    var newID = document.getElementById("otherQuestionValue").value;
+                    location.href = "/public/jotcharts/"+formID+"/related-stats/"+question[0]+"/"+newID;
+                }
+            </script>
+
             <p class="questionHeader" style="color:black;"> {{ otherQuestionType }} </p>
             <div id="otherStatArea">
 
@@ -55,7 +75,27 @@
 
         </div>
         <div class="styledColumn" style="width:41%;height:auto;">
-            <div class="altHeader" > {{ question[1] }} </div>
+            <div class="altHeader" > Scope </div>
+
+            <br>
+            <select onchange="updateMCQuestion()" style="color:#dc3545;text-align: center;" id="mcQuestionValue">
+                {% for q in mcQuestions %}
+                    
+                    {% if question[0] == q[0] %}
+                        <option value="{{q[0]}}" selected> {{q[1]}} </option>
+                    {% else %}
+                        <option value="{{q[0]}}"> {{q[1]}} </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            <script>
+                function updateMCQuestion(){
+                    var newID = document.getElementById("mcQuestionValue").value;
+                    location.href = "/public/jotcharts/"+formID+"/related-stats/"+newID+"/"+otherQuestion[0];
+                }
+            </script>
+
             <p class="questionHeader" style="color:black;"> Multiple Choice </p>
             
             <div id="chartArea">
@@ -81,7 +121,7 @@
             </div>
 
             <script>
-                var formID = ' {{ formID }} ';
+                var formID = '{{formID}}';
 
                 var subarrjson = '{{ submissionArr|json_encode()|raw }}';
                 var submissionArr = JSON.parse(subarrjson);
@@ -348,7 +388,7 @@
                         str += "<tr><th>"+ otherQuestion[1] +"</th></tr>";
                         for(var key in givenSubmissions){
                             //console.log();
-                            str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+formID.substring(1,formID.length-1)+"/"+givenSubmissions[key][3]+"\">"+givenSubmissions[key][2]+"</a>"+"</td> </tr>";
+                            str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+givenSubmissions[key][3]+"\">"+givenSubmissions[key][2]+"</a>"+"</td> </tr>";
                         }
                         str += "</table>";
 
@@ -372,7 +412,7 @@
 
                         for(var key in tempArr){
                             //add filter to inbox
-                            str += "<tr> <td><a href=\"https://www.jotform.com/inbox/"+formID.substring(1,formID.length-1)+"\">"+ key +"</a></td> <td> "+ tempArr[key] +" </td> </tr>";
+                            str += "<tr> <td><a href=\"https://www.jotform.com/inbox/"+formID+"\">"+ key +"</a></td> <td> "+ tempArr[key] +" </td> </tr>";
                         }
                         str += "</table>";
 
@@ -509,9 +549,9 @@
                         str += "<tr><th>"+ "Last" +"</th> <th>"+ "First" +"</th> </tr>";
                         for(var key in givenSubmissions){
                             //add filter to inbox link
-                            str += "<tr> <td><a href=\"https://www.jotform.com/inbox/"+formID.substring(1,formID.length-1)+"/"+givenSubmissions[key][3]+"\">"+
+                            str += "<tr> <td><a href=\"https://www.jotform.com/inbox/"+givenSubmissions[key][3]+"\">"+
                             givenSubmissions[key][2]["last"]
-                             +"</a></td> <td><a href=\"https://www.jotform.com/inbox/"+formID.substring(1,formID.length-1)+"/"+givenSubmissions[key][3]+"\">" +
+                             +"</a></td> <td><a href=\"https://www.jotform.com/inbox/"+formID+"/"+givenSubmissions[key][3]+"\">" +
                              givenSubmissions[key][2]["first"]
                               +"</a></td> </tr>";
                         }
@@ -525,7 +565,7 @@
                         str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
                         str += "<tr><th>"+ "Address" +"</th> </tr>";
                         for(var key in givenSubmissions){
-                            str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+formID.substring(1,formID.length-1)+"/"+givenSubmissions[key][3]+"\">"+
+                            str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+givenSubmissions[key][3]+"\">"+
                             givenSubmissions[key][2]["addr_line1"] + "<br>" +givenSubmissions[key][2]["addr_line2"]+"<br>"+givenSubmissions[key][2]["city"]+" "+givenSubmissions[key][2]["country"]+"<br>"+givenSubmissions[key][2]["postal"]+" "+givenSubmissions[key][2]["state"]
                             +"</a></td> </tr>";
                         }
@@ -539,7 +579,7 @@
                         str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
                         str += "<tr><th>"+ "Phone Number" +"</th> </tr>";
                         for(var key in givenSubmissions){
-                            str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+formID.substring(1,formID.length-1)+"/"+givenSubmissions[key][3]+"\">"+
+                            str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+givenSubmissions[key][3]+"\">"+
                             givenSubmissions[key][2]["area"]+" "+givenSubmissions[key][2]["phone"]
                             +"</a></td>"+"</tr>";
                         }
@@ -558,12 +598,12 @@
                     for (i = 0; i < tr.length; i++) {
                         td = tr[i].getElementsByTagName("td")[0];
                         if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = "";
-                        } else {
-                            tr[i].style.display = "none";
-                        }
+                            txtValue = td.textContent || td.innerText;
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                            } else {
+                                tr[i].style.display = "none";
+                            }
                         }       
                     }
                 }
