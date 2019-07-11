@@ -352,28 +352,28 @@
                             if(fromDate.length != 0 && toDate.length == 0){
                                 explanation += "There are the submission statistics of people who selected";
                                 for(var key in optionFilterArr){
-                                    explanation += " '" +optionFilterArr[key]+"'<br> ";
+                                    explanation += " '<font color=\"#dc3545\">" +optionFilterArr[key]+"</font>'<br> ";
                                 }
-                                explanation += "<br> in question <font color=\"#6f42c1\">"+ questionName +"</font> after <font color=\"#28a745\">"+fromDate+"</font>.";
+                                explanation += " in question <font color=\"#6f42c1\">"+ questionName +"</font> after <font color=\"#28a745\">"+fromDate+"</font>.";
                             }
                             else if(fromDate.length == 0 && toDate.length != 0){
                                 explanation += "There are the submission statistics of people who selected";
                                 for(var key in optionFilterArr){
-                                    explanation += " '" +optionFilterArr[key]+"'<br> ";
+                                    explanation += " '<font color=\"#dc3545\">" +optionFilterArr[key]+"</font>'<br> ";
                                 }
-                                explanation += "<br> in question <font color=\"#6f42c1\">"+ questionName +"</font> before <font color=\"#28a745\">"+toDate+"</font>.";
+                                explanation += " in question <font color=\"#6f42c1\">"+ questionName +"</font> before <font color=\"#28a745\">"+toDate+"</font>.";
                             }
                             else if(fromDate.length != 0 && toDate.length != 0){
                                 explanation += "There are the submission statistics of people who selected";
                                 for(var key in optionFilterArr){
-                                    explanation += " '" +optionFilterArr[key]+"'<br> ";
+                                    explanation += " '<font color=\"#dc3545\">" +optionFilterArr[key]+"</font>'<br> ";
                                 }
-                                explanation += "<br> in question <font color=\"#6f42c1\">"+ questionName +"</font> between <font color=\"#28a745\">"+fromDate+"</font> and <font color=\"#28a745\">"+toDate+"</font>.";
+                                explanation += " in question <font color=\"#6f42c1\">"+ questionName +"</font> between <font color=\"#28a745\">"+fromDate+"</font> and <font color=\"#28a745\">"+toDate+"</font>.";
                             }
                             else{
                                 explanation += "There are the submission statistics of people who selected";
                                 for(var key in optionFilterArr){
-                                    explanation += " <br> '" +optionFilterArr[key]+"'";
+                                    explanation += " <br> '<font color=\"#dc3545\">" +optionFilterArr[key]+"</font>'";
                                 }
                                 explanation += "<br> in question <font color=\"#6f42c1\">"+ questionName + "</font> for all times.";
                                 

@@ -19,8 +19,17 @@
         </div>
 
         <div class="styledColumn" style="width:92%;height:500px;">
-            <div class="altHeader" style="text-align:left;font-weight:bold;">&nbsp <a style="text-decoration:none;color:inherit;" href="/public/jotcharts">JotCharts </a><font style="font-weight:10;font-style:normal" size="6px;" color="#f8f9fa";>|&nbsp</font><font style="font-style:normal;font-size:14px;">for Multiple Choice Form Elements </font></div>
+            <div class="altHeader" style="text-align:left;font-weight:bold;">&nbsp <a style="text-decoration:none;color:inherit;" href="/public/jotcharts">JotCharts </a><font style="font-weight:10;font-style:normal" size="6px;" color="#f8f9fa";>|&nbsp</font><font style="font-style:normal;font-size:14px;">for Multiple Choice Form Elements </font>
+            
+               <img style="float:right;height:66px;width:66px;" src="https://cdn.jotfor.ms/myforms3/img/mascot_my_forms.png" alt="">
+            
+            </div>
+           
+
             <div class="row">
+                <div style="width:2%;">
+
+                </div>
                 <div style="width:46%;">
                     <br>
                     <div style="font-size:25px; left: 50px; display:inline-block; " class="questionHeader">
@@ -36,6 +45,7 @@
                         <button id="btn3" onclick="showRelatedForm()"  class="styledButton">Related Statistics(With Other Form Questions)</button>
 
                     </div>
+                    
                     <br>
 
                     
@@ -212,6 +222,13 @@
                             document.getElementById("right2").innerHTML = "";
                             document.getElementById("right3").innerHTML = "";
                             document.getElementById("right4").innerHTML = "";
+                            document.getElementById("infoArea").style.display = "none";
+                            document.getElementById("defaultArea").style.display = "block";
+                        }
+
+                        function removeDefault(){
+                            document.getElementById("infoArea").style.display = "block";
+                            document.getElementById("defaultArea").style.display = "none";
                         }
 
                         function showIndexForm(){
@@ -225,6 +242,7 @@
 
                             } 
                             else{
+                                removeDefault();
                                 element.style.display = "block";
                                 makeButtonTextColored("index");
                                 updateIndexQuestion();
@@ -248,6 +266,7 @@
                                
                             } 
                             else{
+                                removeDefault();
                                 element.style.display = "block";
                                 makeButtonTextColored("time");
                                 updateTimeQuestion();
@@ -271,6 +290,7 @@
 
                             } 
                             else{
+                                removeDefault();
                                 element.style.display = "block";
                                 makeButtonTextColored("related");
                                 updateQuestions();
@@ -415,16 +435,20 @@
                                 
 
                         
-                       
                     </div>
+                </div>
+                
+                <div style="width:4%;">
+                <hr style="float:left;border:1px solid grey;background-color:grey;height:414px;" width="0" >
 
                 </div>
+
                 <div style="width:46%;">
-                    <div>
+                    <div id="infoArea" style="display: none;">
                         <div class="row">
 
                             <div id="right1" style="width:50%">
-
+                                
                             </div>
 
                             <div id="right2" style="width:50%">
@@ -444,6 +468,19 @@
 
                         </div>
                     </div>
+                    <div id="defaultArea" style="text-align:center;display: block;">
+                        <br><br>
+                        <h2 style="font-size:40px;" class="paragraphHeader">Analyze Your Submissions!</h2>
+                        <p style="font-size: 24px;" class="paragraph">
+
+                            JotForm's JotCharts packs your submissions and give you the relevant data as you want. You can use various filters to reach deeper statistics of your form. Let's start!
+
+                        </p>
+
+                    </div>
+                </div>
+                <div style="width:2%;">
+
                 </div>
             </div>
         </div>
