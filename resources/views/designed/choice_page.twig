@@ -19,12 +19,70 @@
         </div>
 
         <div class="styledColumn" style="width:92%;height:500px;">
-            <div class="altHeader" style="text-align:left;font-weight:bold;">&nbsp <a style="text-decoration:none;color:inherit;" href="/public/jotcharts">JotCharts </a><font style="font-weight:10;font-style:normal" size="6px;" color="#f8f9fa";>|&nbsp</font><font style="font-style:normal;font-size:14px;">for Multiple Choice Form Elements </font>
+            <div class="altHeader" style="text-align:left;font-weight:bold;">&nbsp <a style="text-decoration:none;color:inherit;" href="/public/jotcharts">JotCharts </a><font style="font-weight:10;font-style:normal" size="6px;" color="#f8f9fa";>|&nbsp</font><font style="font-style:normal;font-size:14px;">
+                
+                for <select onchange="chooseQuestionType()" id="getQuestionType">
+
+                    <option value="mc" selected> Multiple Choice </option>
+                    <option value="sc"> Single Choice </option>
+                    <option value="dd"> Dropdown </option>
+
+
+                </select> Form Elements </font>
             
                <img style="float:right;height:66px;width:66px;" src="https://cdn.jotfor.ms/myforms3/img/mascot_my_forms.png" alt="">
             
             </div>
            
+
+            <script>
+                    
+                    function chooseQuestionType(){
+                        currentType = document.getElementById("getQuestionType").value;
+                        if(currentType == "mc"){
+                            document.getElementById("singleChoiceButtons").style.display = "none";
+                            document.getElementById("dropdownButtons").style.display = "none";
+                            document.getElementById("multipleChoiceButtons").style.display = "inline-block";
+                            changeTab();
+                        }
+                        else if(currentType == "sc"){
+                            document.getElementById("dropdownButtons").style.display = "none";
+                            document.getElementById("multipleChoiceButtons").style.display = "none";
+                            document.getElementById("singleChoiceButtons").style.display = "inline-block";
+                            changeTab();
+                            
+                        }
+                        else if(currentType == "dd"){
+                            document.getElementById("multipleChoiceButtons").style.display = "none";
+                            document.getElementById("singleChoiceButtons").style.display = "none";
+                            document.getElementById("dropdownButtons").style.display = "inline-block";
+                            changeTab();
+
+                        }
+                    }
+
+                    function changeTab(){
+                        document.getElementById("indexForm").style.display = "none";
+                        document.getElementById("indexFormSC").style.display = "none";
+                        document.getElementById("indexFormDD").style.display = "none";
+
+                        document.getElementById("timeForm").style.display = "none";
+                        document.getElementById("timeFormSC").style.display = "none";
+                        document.getElementById("timeFormDD").style.display = "none";
+
+                        document.getElementById("relatedForm").style.display = "none";
+                        document.getElementById("relatedFormSC").style.display = "none";
+                        document.getElementById("relatedFormDD").style.display = "none";
+
+                        defaultChartArea();
+                        makeButtonTextDefault("mc");
+                        makeButtonTextDefault("sc");
+                        makeButtonTextDefault("dd");
+
+                    }
+                
+                
+            </script>
 
             <div class="row">
                 <div style="width:2%;">
@@ -36,15 +94,37 @@
                         <font color="black">Form: </font>  <font color="#dc3545"> {{ formName }} </font> 
                     </div>
                     <br> <br>
-                    <div style="text-align:left;left:50px;display:inline-block;">
+                    <div id="multipleChoiceButtons" style="text-align:left;left:50px;display:inline-block;">
                         
-                        <button id="btn1" onclick="showIndexForm()" class="styledButton">Option/Date Filters and Time Period Comparison</button>
+                        <button id="btn1" onclick="showIndexForm('mc')" class="styledButton">Option/Date Filters and Time Period Comparison</button>
                         <br><br>
-                        <button id="btn2" onclick="showTimeForm()"  class="styledButton">Timely Basis Statistics</button>
+                        <button id="btn2" onclick="showTimeForm('mc')"  class="styledButton">Timely Basis Statistics</button>
                         <br><br>
-                        <button id="btn3" onclick="showRelatedForm()"  class="styledButton">Related Statistics(With Other Form Questions)</button>
+                        <button id="btn3" onclick="showRelatedForm('mc')"  class="styledButton">Related Statistics(With Other Form Questions)</button>
 
                     </div>
+
+                    <div id="singleChoiceButtons" style="text-align:left;left:50px;display:none;">
+                        
+                        <button id="btn1SC" onclick="showIndexForm('sc')" class="styledButton">Date Filters and Time Period Comparison</button>
+                        <br><br>
+                        <button id="btn2SC" onclick="showTimeForm('sc')"  class="styledButton">Timely Basis Statistics</button>
+                        <br><br>
+                        <button id="btn3SC" onclick="showRelatedForm('sc')"  class="styledButton">Related Statistics(With Other Form Questions)</button>
+
+                    </div>
+
+                    <div id="dropdownButtons" style="text-align:left;left:50px;display:none;">
+                        
+                        <button id="btn1DD" onclick="showIndexForm('dd')" class="styledButton">Date Filters and Time Period Comparison</button>
+                        <br><br>
+                        <button id="btn2DD" onclick="showTimeForm('dd')"  class="styledButton">Timely Basis Statistics</button>
+                        <br><br>
+                        <button id="btn3DD" onclick="showRelatedForm('dd')"  class="styledButton">Related Statistics(With Other Form Questions)</button>
+
+                    </div>
+
+                    
                     
                     <br>
 
@@ -231,12 +311,30 @@
                             document.getElementById("defaultArea").style.display = "none";
                         }
 
-                        function showIndexForm(){
-                            var element = document.getElementById("indexForm");
+                        function showIndexForm(qtype){
+                            var indexForm, timeForm, relatedForm;
+                            if(qtype == "mc"){
+                                indexForm = "indexForm";
+                                timeForm = "timeForm";
+                                relatedForm = "relatedForm";
+                            }
+                            else if(qtype == "sc"){
+                                indexForm = "indexFormSC";
+                                timeForm = "timeFormSC";
+                                relatedForm = "relatedFormSC";
+                            }
+                            else if(qtype == "dd"){
+                                indexForm = "indexFormDD";
+                                timeForm = "timeFormDD";
+                                relatedForm = "relatedFormDD";
+                            }
+
+                            
+                            var element = document.getElementById(indexForm);
                             if(element.style.display != "none"){
                                 element.style.display = "none";
                                 
-                                makeButtonTextDefault();
+                                makeButtonTextDefault(qtype);
 
                                 defaultChartArea();
 
@@ -244,23 +342,40 @@
                             else{
                                 removeDefault();
                                 element.style.display = "block";
-                                makeButtonTextColored("index");
-                                updateIndexQuestion();
+                                makeButtonTextColored("index",qtype);
+                                updateAllLinks("index",qtype);
 
                                 drawExampleChart("bar-radar");
 
-                                document.getElementById("timeForm").style.display = "none";
-                                document.getElementById("relatedForm").style.display = "none";
+                                document.getElementById(timeForm).style.display = "none";
+                                document.getElementById(relatedForm).style.display = "none";
                                 
                             }
                         }
 
-                        function showTimeForm(){
-                            var element = document.getElementById("timeForm");
+                        function showTimeForm(qtype){
+                            var indexForm, timeForm, relatedForm;
+                            if(qtype == "mc"){
+                                indexForm = "indexForm";
+                                timeForm = "timeForm";
+                                relatedForm = "relatedForm";
+                            }
+                            else if(qtype == "sc"){
+                                indexForm = "indexFormSC";
+                                timeForm = "timeFormSC";
+                                relatedForm = "relatedFormSC";
+                            }
+                            else if(qtype == "dd"){
+                                indexForm = "indexFormDD";
+                                timeForm = "timeFormDD";
+                                relatedForm = "relatedFormDD";
+                            }
+
+                            var element = document.getElementById(timeForm);
                             if(element.style.display != "none"){
                                 element.style.display = "none";
 
-                                makeButtonTextDefault();
+                                makeButtonTextDefault(qtype);
 
                                 defaultChartArea();
                                
@@ -268,23 +383,40 @@
                             else{
                                 removeDefault();
                                 element.style.display = "block";
-                                makeButtonTextColored("time");
-                                updateTimeQuestion();
+                                makeButtonTextColored("time",qtype);
+                                updateAllLinks("time",qtype);
 
                                 drawExampleChart("timely-basis");
 
-                                document.getElementById("indexForm").style.display = "none";
-                                document.getElementById("relatedForm").style.display = "none";
+                                document.getElementById(indexForm).style.display = "none";
+                                document.getElementById(relatedForm).style.display = "none";
                                 
                             }
                         }
 
-                        function showRelatedForm(){
-                            var element = document.getElementById("relatedForm");
+                        function showRelatedForm(qtype){
+                            var indexForm, timeForm, relatedForm;
+                            if(qtype == "mc"){
+                                indexForm = "indexForm";
+                                timeForm = "timeForm";
+                                relatedForm = "relatedForm";
+                            }
+                            else if(qtype == "sc"){
+                                indexForm = "indexFormSC";
+                                timeForm = "timeFormSC";
+                                relatedForm = "relatedFormSC";
+                            }
+                            else if(qtype == "dd"){
+                                indexForm = "indexFormDD";
+                                timeForm = "timeFormDD";
+                                relatedForm = "relatedFormDD";
+                            }
+
+                            var element = document.getElementById(relatedForm);
                             if(element.style.display != "none"){
                                 element.style.display = "none";
 
-                                makeButtonTextDefault();
+                                makeButtonTextDefault(qtype);
 
                                 defaultChartArea();
 
@@ -292,40 +424,18 @@
                             else{
                                 removeDefault();
                                 element.style.display = "block";
-                                makeButtonTextColored("related");
-                                updateQuestions();
+                                makeButtonTextColored("related",qtype);
+                                updateAllLinks("related",qtype);
 
                                 drawExampleChart("related-stats");
 
-                                document.getElementById("timeForm").style.display = "none";
-                                document.getElementById("indexForm").style.display = "none";
+                                document.getElementById(timeForm).style.display = "none";
+                                document.getElementById(indexForm).style.display = "none";
                                 
                             }
                         }
 
-                        function makeButtonTextColored(type){
-                            if(type == "index"){
-                                document.getElementById("btn1").style.backgroundColor="#ffc107";
-                                document.getElementById("btn2").style.backgroundColor="#f8f9fa";
-                                document.getElementById("btn3").style.backgroundColor="#f8f9fa";
-                            }
-                            else if(type == "time"){
-                                document.getElementById("btn2").style.backgroundColor="#ffc107";
-                                document.getElementById("btn1").style.backgroundColor="#f8f9fa";
-                                document.getElementById("btn3").style.backgroundColor="#f8f9fa";
-                            }
-                            else if(type == "related"){
-                                document.getElementById("btn3").style.backgroundColor="#ffc107";
-                                document.getElementById("btn2").style.backgroundColor="#f8f9fa";
-                                document.getElementById("btn1").style.backgroundColor="#f8f9fa";
-                            }
-                        }
-
-                        function makeButtonTextDefault(){
-                            document.getElementById("btn3").style.backgroundColor="#f8f9fa";
-                            document.getElementById("btn2").style.backgroundColor="#f8f9fa";
-                            document.getElementById("btn1").style.backgroundColor="#f8f9fa";
-                        }
+                        
                     </script>
                     
                     
@@ -335,7 +445,7 @@
                                 <div style="color:black;">
                                     Choose a <font color="#dc3545">multiple choice question</font> in your form:
                                 </div>
-                                <select id="indexID" onchange="updateIndexQuestion()" name="question">
+                                <select id="indexID" onchange="updateAllLinks('index','mc')" name="question">
         
                                     {% for info in infoArr %}
                                         <option value="{{info[0]}}"> {{ info[1] }} </option>
@@ -346,10 +456,7 @@
                                 <br><br>
                                 <script>
                                 
-                                function updateIndexQuestion(){
-                                    var mcq = document.getElementById("indexID").value;
-                                    document.getElementById("indexSubmit").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/bar-radar/"+mcq+"\">Select</a>"
-                                }
+                               
                             
                                 </script> 
         
@@ -358,6 +465,59 @@
                                 </div>
 
                         
+                    </div>
+                    <div class="info" style="float:center;padding:5px;display:none;" id="indexFormSC">
+
+                            <br>
+                            <div style="color:black;">
+                                Choose a <font color="#dc3545">single choice question</font> in your form:
+                            </div>
+                            <select id="indexIDSC" onchange="updateAllLinks('index','sc')" name="question">
+    
+                                {% for info in singleChoiceQuestions %}
+                                    <option value="{{info[0]}}"> {{ info[1] }} </option>
+                                {% endfor %}
+    
+                            </select>
+    
+                            <br><br>
+                            <script>
+                            
+                        
+                            </script> 
+    
+                            <div id="indexSubmitSC">
+    
+                            </div>
+
+                    
+                    </div>
+                    <div class="info" style="float:center;padding:5px;display:none;" id="indexFormDD">
+
+                            <br>
+                            <div style="color:black;">
+                                Choose a <font color="#dc3545">dropdown question</font> in your form:
+                            </div>
+                            <select id="indexIDDD" onchange="updateAllLinks('index','dd')" name="question">
+    
+                                {% for info in dropdownQuestions %}
+                                    <option value="{{info[0]}}"> {{ info[1] }} </option>
+                                {% endfor %}
+    
+                            </select>
+    
+                            <br><br>
+                            <script>
+                            
+                            
+                        
+                            </script> 
+    
+                            <div id="indexSubmitDD">
+    
+                            </div>
+
+                    
                     </div>
 
                     <br>
@@ -370,21 +530,14 @@
                                 <div style="color:black;">
                                         Choose a <font color="#dc3545">multiple choice question</font> in your form:
                                 </div>
-                                <select onchange="updateTimeQuestion()" id="timeID" name="question">
+                                <select onchange="updateAllLinks('time','mc')" id="timeID" name="question">
         
                                     {% for info in infoArr %}
                                         <option value="{{info[0]}}"> {{ info[1] }} </option>
                                     {% endfor %}
         
                                 </select>
-                                <script>
                                 
-                                    function updateTimeQuestion(){
-                                        var mcq = document.getElementById("timeID").value;
-                                        document.getElementById("timeSubmit").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/time-basis/"+mcq+"\">Select</a>"
-                                    }
-                                
-                                </script>
                                 
                                 <br><br>
                                 <div id="timeSubmit">
@@ -392,6 +545,54 @@
                                 </div>
                             
                         
+                    </div>
+                    <div class="info" style="float:center;padding:5px;display:none;" id="timeFormSC">
+                        
+                                
+                            <div style="color:black;">
+                                    Choose a <font color="#dc3545">single choice question</font> in your form:
+                            </div>
+                            <select onchange="updateAllLinks('time','sc')" id="timeIDSC" name="question">
+    
+                                {% for info in singleChoiceQuestions %}
+                                    <option value="{{info[0]}}"> {{ info[1] }} </option>
+                                {% endfor %}
+    
+                            </select>
+                            <script>
+                            
+                            </script>
+                            
+                            <br><br>
+                            <div id="timeSubmitSC">
+                                
+                            </div>
+                        
+                    
+                    </div>
+                    <div class="info" style="float:center;padding:5px;display:none;" id="timeFormDD">
+                        
+                                
+                            <div style="color:black;">
+                                    Choose a <font color="#dc3545">dropdown question</font> in your form:
+                            </div>
+                            <select onchange="updateAllLinks('time','dd')" id="timeIDDD" name="question">
+    
+                                {% for info in dropdownQuestions %}
+                                    <option value="{{info[0]}}"> {{ info[1] }} </option>
+                                {% endfor %}
+    
+                            </select>
+                            <script>
+                            
+                            </script>
+                            
+                            <br><br>
+                            <div id="timeSubmitDD">
+                                
+                            </div>
+                        
+                    
                     </div>
 
                     <div class="info" style="display:none;float:center;padding:5px;" id="relatedForm" >
@@ -401,7 +602,7 @@
                                     Target Question&nbsp&nbsp&nbsp&nbspMC Question&nbsp&nbsp&nbsp&nbsp&nbsp
                                 </div>
                                 
-                                <select onchange="updateQuestions()" id="otherq" name="otherQuestion" style="width:200px;">
+                                <select onchange="updateAllLinks('related','mc')" id="otherq" name="otherQuestion" style="width:200px;">
         
                                     {% for q in allQuestions %}
                                         <option value="{{q[0]}}"> {{ q[1] }} </option>
@@ -409,7 +610,7 @@
         
                                 </select>
                                 &nbsp
-                                <select onchange="updateQuestions()" id="mcq" name="question" style="width: 200px;">
+                                <select onchange="updateAllLinks('related','mc')" id="mcq" name="question" style="width: 200px;">
         
                                     {% for info in infoArr %}
                                         <option value="{{info[0]}}"> {{ info[1] }} </option>
@@ -421,13 +622,7 @@
                                 <br><br>
                                 
                                 <script>
-                                    
-                                    function updateQuestions(){
-                                        var mcq = document.getElementById("mcq").value;
-                                        var otherq = document.getElementById("otherq").value;
-                                        document.getElementById("relatedSubmit").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/related-stats/"+mcq+"/"+otherq+"\">Select</a>"
-                                    }
-                                
+                                  
                                 </script>
                                 <div id="relatedSubmit">
                                     
@@ -435,6 +630,81 @@
                                 
 
                         
+                    </div>
+                    <div class="info" style="display:none;float:center;padding:5px;" id="relatedFormSC" >
+                        
+                                
+                            <div style="color:black;">
+                                Target Question&nbsp&nbsp&nbsp&nbspMC Question&nbsp&nbsp&nbsp&nbsp&nbsp
+                            </div>
+                            
+                            <select onchange="updateAllLinks('related','sc')" id="otherqSC" name="otherQuestion" style="width:200px;">
+    
+                                {% for q in allQuestions %}
+                                    <option value="{{q[0]}}"> {{ q[1] }} </option>
+                                {% endfor %}
+    
+                            </select>
+                            &nbsp
+                            <select onchange="updateAllLinks('related','sc')" id="scq" name="question" style="width: 200px;">
+    
+                                {% for info in singleChoiceQuestions %}
+                                    <option value="{{info[0]}}"> {{ info[1] }} </option>
+                                {% endfor %}
+    
+                            </select>
+                            
+    
+                            <br><br>
+                            
+                            <script>
+                                
+                                
+                            </script>
+                            <div id="relatedSubmitSC">
+                                
+                            </div>
+                            
+
+                    
+                    </div>
+                    <div class="info" style="display:none;float:center;padding:5px;" id="relatedFormDD" >
+                        
+                                
+                            <div style="color:black;">
+                                Target Question&nbsp&nbsp&nbsp&nbspMC Question&nbsp&nbsp&nbsp&nbsp&nbsp
+                            </div>
+                            
+                            <select onchange="updateAllLinks('related','dd')" id="otherqDD" name="otherQuestion" style="width:200px;">
+    
+                                {% for q in allQuestions %}
+                                    <option value="{{q[0]}}"> {{ q[1] }} </option>
+                                {% endfor %}
+    
+                            </select>
+                            &nbsp
+                            <select onchange="updateAllLinks('related','dd')" id="ddq" name="question" style="width: 200px;">
+    
+                                {% for info in dropdownQuestions %}
+                                    <option value="{{info[0]}}"> {{ info[1] }} </option>
+                                {% endfor %}
+    
+                            </select>
+                            
+    
+                            <br><br>
+                            
+                            <script>
+                                
+                                
+                            
+                            </script>
+                            <div id="relatedSubmitDD">
+                                
+                            </div>
+                            
+
+                    
                     </div>
                 </div>
                 
@@ -471,6 +741,7 @@
                     <div id="defaultArea" style="text-align:center;display: block;">
                         <br><br>
                         <h2 style="font-size:40px;" class="paragraphHeader">Analyze Your Submissions!</h2>
+                        
                         <p style="font-size: 24px;" class="paragraph">
 
                             JotForm's JotCharts packs your submissions and give you the relevant data as you want. You can use various filters to reach deeper statistics of your form. Let's start!
@@ -491,6 +762,136 @@
 
     </div>
  
+    <script>
+
+        //Functions to tide up...
+
+        function makeButtonTextColored(type, qtype){
+            if(type == "index"){
+                if(qtype == "mc"){
+                    document.getElementById("btn1").style.backgroundColor="#ffc107";
+                    document.getElementById("btn2").style.backgroundColor="#f8f9fa";
+                    document.getElementById("btn3").style.backgroundColor="#f8f9fa";
+                }
+                else if(qtype == "sc"){
+                    document.getElementById("btn1SC").style.backgroundColor="#ffc107";
+                    document.getElementById("btn2SC").style.backgroundColor="#f8f9fa";
+                    document.getElementById("btn3SC").style.backgroundColor="#f8f9fa";
+                }
+                else if(qtype == "dd"){
+                    document.getElementById("btn1DD").style.backgroundColor="#ffc107";
+                    document.getElementById("btn2DD").style.backgroundColor="#f8f9fa";
+                    document.getElementById("btn3DD").style.backgroundColor="#f8f9fa";
+                }
+            }
+            else if(type == "time"){
+                if(qtype == "mc"){
+                    document.getElementById("btn2").style.backgroundColor="#ffc107";
+                    document.getElementById("btn1").style.backgroundColor="#f8f9fa";
+                    document.getElementById("btn3").style.backgroundColor="#f8f9fa";
+                }
+                else if(qtype == "sc"){
+                    document.getElementById("btn2SC").style.backgroundColor="#ffc107";
+                    document.getElementById("btn1SC").style.backgroundColor="#f8f9fa";
+                    document.getElementById("btn3SC").style.backgroundColor="#f8f9fa";
+                }
+                else if(qtype == "dd"){
+                    document.getElementById("btn2DD").style.backgroundColor="#ffc107";
+                    document.getElementById("btn1DD").style.backgroundColor="#f8f9fa";
+                    document.getElementById("btn3DD").style.backgroundColor="#f8f9fa";
+                
+                }
+            }
+            else if(type == "related"){
+                if(qtype == "mc"){
+                    document.getElementById("btn3").style.backgroundColor="#ffc107";
+                    document.getElementById("btn2").style.backgroundColor="#f8f9fa";
+                    document.getElementById("btn1").style.backgroundColor="#f8f9fa";
+                }
+                else if(qtype == "sc"){
+                    document.getElementById("btn3SC").style.backgroundColor="#ffc107";
+                    document.getElementById("btn2SC").style.backgroundColor="#f8f9fa";
+                    document.getElementById("btn1SC").style.backgroundColor="#f8f9fa";
+                }
+                else if(qtype == "dd"){
+                    document.getElementById("btn3DD").style.backgroundColor="#ffc107";
+                    document.getElementById("btn2DD").style.backgroundColor="#f8f9fa";
+                    document.getElementById("btn1DD").style.backgroundColor="#f8f9fa";
+                }
+            }
+        }
+
+        function makeButtonTextDefault(qtype){
+            if(qtype == "mc"){
+                document.getElementById("btn3").style.backgroundColor="#f8f9fa";
+                document.getElementById("btn2").style.backgroundColor="#f8f9fa";
+                document.getElementById("btn1").style.backgroundColor="#f8f9fa";
+            }
+        
+            else if(qtype == "sc"){
+                document.getElementById("btn3SC").style.backgroundColor="#f8f9fa";
+                document.getElementById("btn2SC").style.backgroundColor="#f8f9fa";
+                document.getElementById("btn1SC").style.backgroundColor="#f8f9fa";
+            }
+            else if(qtype == "dd"){
+                document.getElementById("btn3DD").style.backgroundColor="#f8f9fa";
+                document.getElementById("btn2DD").style.backgroundColor="#f8f9fa";
+                document.getElementById("btn1DD").style.backgroundColor="#f8f9fa";
+            }
+        }
+
+        function updateAllLinks(formStyle, qtype){
+            if(formStyle == "index"){
+                if(qtype == "mc"){
+                    var mcq = document.getElementById("indexID").value;
+                    document.getElementById("indexSubmit").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/checkbox/bar-radar/"+mcq+"\">Select</a>"
+                }
+                else if(qtype == "sc"){
+                    var scq = document.getElementById("indexIDSC").value;
+                    document.getElementById("indexSubmitSC").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/radio/bar-radar/"+scq+"\">Select</a>"
+                }
+                else if(qtype == "dd"){
+                    var ddq = document.getElementById("indexIDDD").value;
+                    document.getElementById("indexSubmitDD").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/dropdown/bar-radar/"+ddq+"\">Select</a>"
+                }
+            }
+            else if(formStyle == "time"){
+                if(qtype == "mc"){
+                    var mcq = document.getElementById("timeID").value;
+                    document.getElementById("timeSubmit").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/checkbox/time-basis/"+mcq+"\">Select</a>"
+                }
+                else if(qtype == "sc"){
+                    var scq = document.getElementById("timeIDSC").value;
+                    document.getElementById("timeSubmitSC").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/radio/time-basis/"+scq+"\">Select</a>"
+                }
+                else if(qtype == "dd"){
+                    var ddq = document.getElementById("timeIDDD").value;
+                    document.getElementById("timeSubmitDD").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/dropdown/time-basis/"+ddq+"\">Select</a>"
+                }
+            }
+            else if(formStyle == "related"){
+                if(qtype == "mc"){
+                    var mcq = document.getElementById("mcq").value;
+                    var otherq = document.getElementById("otherq").value;
+                    document.getElementById("relatedSubmit").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/checkbox/related-stats/"+mcq+"/"+otherq+"\">Select</a>"
+                }
+                else if(qtype == "sc"){
+                    var scq = document.getElementById("scq").value;
+                    var otherqSC = document.getElementById("otherqSC").value;
+                    document.getElementById("relatedSubmitSC").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/radio/related-stats/"+scq+"/"+otherqSC+"\">Select</a>"
+                }
+                else if(qtype == "dd"){
+                    var ddq = document.getElementById("ddq").value;
+                    var otherqDD = document.getElementById("otherqDD").value;
+                    document.getElementById("relatedSubmitDD").innerHTML = "<a style=\"border:1px solid black;display:inline-block;width:100px;\" class=\"button\" href=\"/public/jotcharts/"+formID+"/dropdown/related-stats/"+ddq+"/"+otherqDD+"\">Select</a>"
+                }
+            }
+        }
+
+        
+    </script>
+
+
 
 
 {% endblock %}

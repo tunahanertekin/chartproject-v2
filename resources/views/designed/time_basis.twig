@@ -9,18 +9,7 @@
         }
     </style>
 
-    <script>
-        var months = [ "January", "February", "March", "April", "May", "June", 
-                    "July", "August", "September", "October", "November", "December" ];
-        function getRandomColor(){
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-    </script>
+   
 
     <div class="row" style="height:25px">
 
@@ -44,7 +33,7 @@
 
             <br>
             
-            <select id="statBasis" onchange="decide()">
+            <select style="text-align: center;" id="statBasis" onchange="decide()">
                 <option value="monthly">Monthly</option>
                 <option value="daily">Daily</option>
             </select>
@@ -53,7 +42,7 @@
 
             <br><br>
             <div id="aroundDateChoice" style="visibility: hidden;">
-                Around: <input type="date" id="aroundDate" onchange="setAroundDate()">
+                Around: <br> <input type="date" id="aroundDate" onchange="setAroundDate()">
             </div>
             
             <br><br>
@@ -61,7 +50,26 @@
 
             </div>
 
+            
+
+
+        </div>
+
+        <div style="width: 10%;">
+
+        </div>
+
+    </div>
+    <div class="row" style="height:25px;">
+
+
+    </div>
+
             <script>
+                var months = [ "January", "February", "March", "April", "May", "June", 
+                "July", "August", "September", "October", "November", "December" ];
+                
+           
                 var subarrjson = '{{ submissionArr|json_encode()|raw }}';
                 var submissionArr = JSON.parse(subarrjson);
 
@@ -79,6 +87,15 @@
                 aroundDate = new Date();
 
                 getMonthlyStats();
+
+                function getRandomColor(){
+                    var letters = '0123456789ABCDEF';
+                    var color = '#';
+                    for (var i = 0; i < 6; i++) {
+                        color += letters[Math.floor(Math.random() * 16)];
+                    }
+                    return color;
+                }
 
                 function setAroundDate(){
                     var aroundDateStr = document.getElementById("aroundDate");
@@ -288,18 +305,4 @@
                     return months[arr[1]-1]+" "+arr[2]+", "+arr[0];
                 }
             </script>
-
-
-        </div>
-
-        <div style="width: 10%;">
-
-        </div>
-
-    </div>
-    <div class="row" style="height:25px;">
-
-
-    </div>
-
 {% endblock %}

@@ -29,10 +29,7 @@ class ChartController{
         $this->jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
     }
 
-    public function frontendTrial($request,$response,$args){
-        return $this->c->view->render($response,"designed/frontend.twig");
-    }
-
+    
     /*
     * For every request, data is received from API.
     */
@@ -66,9 +63,17 @@ class ChartController{
         $formName = $this->jotformAPI->getForm($formID)["title"];
         $questions = $this->jotformAPI->getFormQuestions($this->form["id"]);
         
+        $singleChoiceQuestions = array();
+        $dropdownQuestions = array();
         $infoArr = array();
         $allQuestions = array();
         foreach($questions as $q){
+            if($q["type"] == "control_radio"){
+                array_push($singleChoiceQuestions,array($q["qid"],$q["text"]));
+            }
+            if($q["type"] == "control_dropdown"){
+                array_push($dropdownQuestions,array($q["qid"],$q["text"]));
+            }
             if($q["type"] == "control_checkbox"){
                 array_push($infoArr,array($q["qid"],$q["text"]));
             }
@@ -77,7 +82,9 @@ class ChartController{
             }
         }
 
-        return $this->c->view->render($response,"designed/choice_page.twig",compact("infoArr","allQuestions","formID","formName"));
+        
+
+        return $this->c->view->render($response,"designed/choice_page.twig",compact("infoArr","allQuestions","singleChoiceQuestions","dropdownQuestions","formID","formName"));
     }
 
     /*
