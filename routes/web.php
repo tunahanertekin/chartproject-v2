@@ -35,55 +35,36 @@ $app->group('/jotcharts',function(){
 
         $this->group('/radio',function(){
             $this->group('/bar-radar',function(){
-                $this->get('/{mcq}',function($request,$response,$args){
-                    return "Single Choice: bar-radar";
-                });
-                $this->post('/{mcq}',function($request,$response,$args){
-                    return "Single Choice: bar-radar";
-                });
+                $this->get('/{scq}',ChartController::class.":radioIndex");
+                $this->post('/{scq}',ChartController::class.":radioIndex");
             });
             $this->group('/time-basis',function(){
-                $this->get('/{mcq}',function($request,$response,$args){
-                    return "Single Choice: time basis";
-                });
-                $this->post('/{mcq}',function($request,$response,$args){
-                    return "Single Choice: time basis";
-                });
+                $this->get('/{scq}',ChartController::class.":radioTimeBasis");
+                $this->post('/{scq}',ChartController::class.":radioTimeBasis");
             });
-            $this->group('/related-stats/{mcq}/{oq}',function(){
-                $this->get('',function($request,$response,$args){
-                    return "Single Choice: related stats";
-                });
-                $this->post('',function($request,$response,$args){
-                    return "Single Choice: related stats";
-                });
+            $this->group('/related-stats/{scq}/{oq}',function(){
+                $this->get('',ChartController::class.":radioRelatedStats");
+                $this->post('',ChartController::class.":radioRelatedStats");
             });
+                
         });
 
         $this->group('/dropdown',function(){
             $this->group('/bar-radar',function(){
-                $this->get('/{mcq}',function($request,$response,$args){
-                    return "Dropdown: bar-radar";
-                });
-                $this->post('/{mcq}',function($request,$response,$args){
-                    return "Dropdown: bar-radar";
-                });
+                $this->get('/{ddq}',ChartController::class.":dropdownIndex");
+                $this->post('/{ddq}',ChartController::class.":dropdownIndex");
             });
             $this->group('/time-basis',function(){
-                $this->get('/{mcq}',function($request,$response,$args){
+                $this->get('/{ddq}',function($request,$response,$args){
                     return "Dropdown: time basis";
                 });
-                $this->post('/{mcq}',function($request,$response,$args){
+                $this->post('/{ddq}',function($request,$response,$args){
                     return "Dropdown: time basis";
                 });
             });
-            $this->group('/related-stats/{mcq}/{oq}',function(){
-                $this->get('',function($request,$response,$args){
-                    return "Dropdown: related stats";
-                });
-                $this->post('',function($request,$response,$args){
-                    return "Dropdown: related stats";
-                });
+            $this->group('/related-stats/{ddq}/{oq}',function(){
+                $this->get('',ChartController::class.":dropdownRelatedStats");
+                $this->post('',ChartController::class.":dropdownRelatedStats");
             });
         });
 

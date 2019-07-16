@@ -107,6 +107,37 @@ class ChartController{
         return $this->c->view->render($response,"designed/index.twig",compact("submissionArr","question"));
     }
 
+    public function radioIndex($request,$response,$args){
+
+        $formID = $args["formID"];
+        $this->setFormAndSubmissions($formID);
+        $qid = $args["scq"];
+        $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
+
+        $submissionArr = array();
+        foreach($this->submissions as $s){
+            array_push($submissionArr,array($s["created_at"],$s["answers"][$qid]["answer"],$s["id"]));
+        }
+        $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
+
+        return $this->c->view->render($response, "designed/radio/radio_index.twig",compact("question","submissionArr"));
+    }
+
+    public function dropdownIndex($request,$response,$args){
+        $formID = $args["formID"];
+        $this->setFormAndSubmissions($formID);
+        $qid = $args["ddq"];
+        $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
+
+        $submissionArr = array();
+        foreach($this->submissions as $s){
+            array_push($submissionArr,array($s["created_at"],$s["answers"][$qid]["answer"],$s["id"]));
+        }
+        $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
+
+        return $this->c->view->render($response, "designed/dropdown/dropdown_index.twig",compact("question","submissionArr"));
+    }
+
     /*
     * Sends the submission data to frontend, then filter it with JS. Time periods are compared.
     */
@@ -124,6 +155,10 @@ class ChartController{
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         
         return $this->c->view->render($response,"designed/time_basis.twig",compact("question","submissionArr"));
+    }
+
+    public function radioTimeBasis($request,$response,$args){
+        return $this->c->view->render($response, "designed/radio/radio_time.twig");
     }
 
     /*
@@ -153,17 +188,75 @@ class ChartController{
             }
         }
 
-        $submissionArr = $this->getAuxSubmissionArr($qid,$otherQid);
+        $submissionArr = $this->getAuxSubmisionArrays($qid,$otherQid);
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         $otherQuestion = array($otherQuestionJSON["qid"],str_ireplace("'","",$otherQuestionJSON["text"]),$otherQuestionJSON["type"]);
 
         return $this->c->view->render($response,"designed/related_stats.twig",compact("mcQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
     }
 
+    public function radioRelatedStats($request,$response,$args){
+        $formID = $args["formID"];
+        $this->setFormAndSubmissions($formID);
+        $questions = $this->jotformAPI->getFormQuestions($formID);
+        $qid = $args["scq"];
+        $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
+        $questionNumber = sizeof($this->jotformAPI->getFormQuestions($this->form["id"]));
+        $otherQid = $args["oq"];
+        $otherQuestionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$otherQid);
+        $otherQuestionType = $otherQuestionJSON["type"];
+
+        $scQuestions = array();
+        $allQuestions = array();
+        foreach($questions as $q){
+            if($q["type"] == "control_radio"){
+                array_push($scQuestions,array($q["qid"],$q["text"]));
+            }
+            if($q["type"] != "control_button" && $q["type"] != "control_head"){
+                array_push($allQuestions,array($q["qid"],$q["text"]));
+            }
+        }
+
+        $submissionArr = $this->getAuxSubmisionArrays($qid,$otherQid);
+        $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
+        $otherQuestion = array($otherQuestionJSON["qid"],str_ireplace("'","",$otherQuestionJSON["text"]),$otherQuestionJSON["type"]);
+
+        return $this->c->view->render($response, "designed/radio/radio_related.twig", compact("scQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
+    }
+
+    public function dropdownRelatedStats($request,$response,$args){
+        $formID = $args["formID"];
+        $this->setFormAndSubmissions($formID);
+        $questions = $this->jotformAPI->getFormQuestions($formID);
+        $qid = $args["ddq"];
+        $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
+        $questionNumber = sizeof($this->jotformAPI->getFormQuestions($this->form["id"]));
+        $otherQid = $args["oq"];
+        $otherQuestionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$otherQid);
+        $otherQuestionType = $otherQuestionJSON["type"];
+
+        $ddQuestions = array();
+        $allQuestions = array();
+        foreach($questions as $q){
+            if($q["type"] == "control_dropdown"){
+                array_push($ddQuestions,array($q["qid"],$q["text"]));
+            }
+            if($q["type"] != "control_button" && $q["type"] != "control_head"){
+                array_push($allQuestions,array($q["qid"],$q["text"]));
+            }
+        }
+
+        $submissionArr = $this->getAuxSubmisionArrays($qid,$otherQid);
+        $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
+        $otherQuestion = array($otherQuestionJSON["qid"],str_ireplace("'","",$otherQuestionJSON["text"]),$otherQuestionJSON["type"]);
+
+        return $this->c->view->render($response, "designed/dropdown/dropdown_related.twig", compact("ddQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
+    }
+
     /*
     * Simplifies the submission data.
     */
-    public function getAuxSubmissionArr($mcQid,$otherQid){
+    public function getAuxSubmisionArrays($mcQid,$otherQid){
         $compactArr = array();
         /*
             It is convenient for 
