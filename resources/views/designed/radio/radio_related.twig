@@ -46,6 +46,7 @@
         <div class="styledColumn" style="width:41%;height:auto;">
             <div class="altHeader"> Target </div>
             <br>
+
             <select style="color:#dc3545;text-align: center;" id="targetQuestion" onchange="updateTargetQuestion()">
                     {% for q in allQuestions %}
                         {% if q[0] == otherQuestion[0] %}
@@ -98,7 +99,14 @@
             <div id="targetStatArea">
 
             </div>
-            <br><br>
+            <br>
+            <div id="iframeArea">
+                
+
+            </div>
+            
+            
+            <br>
 
         </div>
 
@@ -109,6 +117,7 @@
         <div class="styledColumn" style="width:41%;height:auto;">
             <div class="altHeader"> Scope </div>
             <br>
+            
             <select id="scQuestion" style="color:#dc3545;text-align: center;" id="scQuestion">
                 {% for q in scQuestions %}
                     {% if q[0] == question[0] %}
@@ -135,6 +144,7 @@
     
             {% endfor %}
 
+            <br>
             <input type="radio" name="rad" value="nothingChoosed" onclick="mergeFilters()"> None of those
 
             <br><br>
