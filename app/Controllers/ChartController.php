@@ -43,13 +43,14 @@ class ChartController{
     */
     public function formChoice($request,$response,$args){
         $forms = $this->jotformAPI->getForms();
+        $noAboveLink = "No above link";
         
         $formArr = array();
         foreach($forms as $f){
             array_push($formArr,array($f["id"],$f["title"],$f["count"],$f["updated_at"]));
         }
 
-        return $this->c->view->render($response,"designed/form_choice.twig",compact("formArr"));
+        return $this->c->view->render($response,"designed/form_choice.twig",compact("formArr","noAboveLink"));
     }
 
     /*
@@ -62,6 +63,7 @@ class ChartController{
         $this->setFormAndSubmissions($formID);
         $formName = $this->jotformAPI->getForm($formID)["title"];
         $questions = $this->jotformAPI->getFormQuestions($this->form["id"]);
+        $noAboveLink = "No above link";
         
         $singleChoiceQuestions = array();
         $dropdownQuestions = array();
@@ -84,7 +86,7 @@ class ChartController{
 
         
 
-        return $this->c->view->render($response,"designed/choice_page.twig",compact("infoArr","allQuestions","singleChoiceQuestions","dropdownQuestions","formID","formName"));
+        return $this->c->view->render($response,"designed/choice_page.twig",compact("infoArr","allQuestions","singleChoiceQuestions","dropdownQuestions","formID","formName","noAboveLink"));
     }
 
     /*

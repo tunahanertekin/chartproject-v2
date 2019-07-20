@@ -15,6 +15,35 @@
 
                         mergeFilters();
 
+                        function previewSubmission(submissionID){
+                            var str = "<div class=\"altHeaderv2\"><a style=\"color:#6f42c1;;float:left;text-decoration:none;\" href=\"/public/jotcharts\">&nbsp JotCharts</a>"+
+                            "</div>";
+                            str += "<iframe style=\"border:0px solid black;width:100%;height:100%;display:block;\" src=\"https://www.jotform.com/inbox/"+submissionID+"\"></iframe>";
+                            var content = "<div style=\"width:100%;height:100%;\" id=\"myModal\" class=\"modal\">"+
+                            "<div class=\"modal-content\">"+
+                              "<span class=\"close\">&times;</span>"+
+                                str+
+                                "<a style=\"border-radius:0px;\" class=\"button\" href=\"https://www.jotform.com/inbox/"+submissionID+"\">Go Inbox</a>"+  
+                            "</div>"+
+                          
+                          "</div>";
+                            
+                            document.getElementById("iframeArea").innerHTML = content;
+
+                            var modal = document.getElementById("myModal");
+                            var span = document.getElementsByClassName("close")[0];
+                            modal.style.display = "block";
+
+                            span.onclick = function() {
+                                modal.style.display = "none";
+                            }
+      
+                            window.onclick = function(event) {
+                                if (event.target == modal) {
+                                    modal.style.display = "none";
+                                }
+                            } 
+                        }
 
                         function getRandomColor(){
                             
@@ -334,8 +363,8 @@
                                     str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
                                     str += "<tr><th>"+ otherQuestion[1] +"</th></tr>";
                                     for(var key in givenSubmissions){
-                                        //console.log();
-                                        str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+givenSubmissions[key][3]+"\">"+givenSubmissions[key][2]+"</a>"+"</td> </tr>";
+                                        const submissionID = givenSubmissions[key][3];
+                                        str += "<tr onClick='previewSubmission(\""+ submissionID + "\")'> <td>"+ "<a href=\"#\" style=\"text-decoration: none;\" onClick='previewSubmission(\""+ submissionID + "\")'>"+givenSubmissions[key][2]+"</a>"+"</td> </tr>";
                                     }
                                     str += "</table>";
 
@@ -548,9 +577,10 @@
                                     str += "<tr><th>"+ "Last" +"</th> <th>"+ "First" +"</th> </tr>";
                                     for(var key in givenSubmissions){
                                         //add filter to inbox link
-                                        str += "<tr> <td><a href=\"https://www.jotform.com/inbox/"+givenSubmissions[key][3]+"\">"+
+                                        const submissionID = givenSubmissions[key][3];
+                                        str += "<tr onClick='previewSubmission(\""+ submissionID + "\")'> <td>"+ "<a href=\"#\" style=\"text-decoration: none;\" onClick='previewSubmission(\""+ submissionID + "\")'>"+
                                         givenSubmissions[key][2]["last"]
-                                        +"</a></td> <td><a href=\"https://www.jotform.com/inbox/"+formID+"/"+givenSubmissions[key][3]+"\">" +
+                                        +"</a></td>  <td>"+ "<a href=\"#\" style=\"text-decoration: none;\" onClick='previewSubmission(\""+ submissionID + "\")'>" +
                                         givenSubmissions[key][2]["first"]
                                         +"</a></td> </tr>";
                                     }
@@ -614,7 +644,8 @@
                                     str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
                                     str += "<tr><th>"+ "Address" +"</th> </tr>";
                                     for(var key in givenSubmissions){
-                                        str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+givenSubmissions[key][3]+"\">"+
+                                        const submissionID = givenSubmissions[key][3];
+                                        str += "<tr onClick='previewSubmission(\""+ submissionID + "\")'> <td>"+ "<a href=\"#\" style=\"text-decoration: none;\" onClick='previewSubmission(\""+ submissionID + "\")'>"+
                                         givenSubmissions[key][2]["addr_line1"] + "<br>" +givenSubmissions[key][2]["addr_line2"]+"<br>"+givenSubmissions[key][2]["city"]+" "+givenSubmissions[key][2]["country"]+"<br>"+givenSubmissions[key][2]["postal"]+" "+givenSubmissions[key][2]["state"]
                                         +"</a></td> </tr>";
                                     }
@@ -629,7 +660,8 @@
                                 str += "<table id=\"table\" class=\"dataTable\" style=\"text-align:center;margin:0 auto;\">";
                                 str += "<tr><th>"+ "Phone Number" +"</th> </tr>";
                                 for(var key in givenSubmissions){
-                                    str += "<tr> <td>"+ "<a href=\"https://www.jotform.com/inbox/"+givenSubmissions[key][3]+"\">"+
+                                    const submissionID = givenSubmissions[key][3];
+                                    str += "<tr onClick='previewSubmission(\""+ submissionID + "\")'> <td>"+ "<a href=\"#\" style=\"text-decoration: none;\" onClick='previewSubmission(\""+ submissionID + "\")'>"+
                                     givenSubmissions[key][2]["area"]+" "+givenSubmissions[key][2]["phone"]
                                     +"</a></td>"+"</tr>";
                                 }
