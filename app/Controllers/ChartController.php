@@ -23,10 +23,12 @@ class ChartController{
     public $form; //Form choosed
     public $submissions; //Submissions of form
     public $c; //Container variable
+    public $formList;
 
     public function __construct(ContainerInterface $c){
         $this->c = $c;
         $this->jotformAPI = new JotForm("286dec88b006d9221daf40d94278c162");
+        $this->formList = $this->jotformAPI->getForms();
     }
 
     
@@ -96,9 +98,12 @@ class ChartController{
     public function index($request,$response,$args){
         
         $formID = $args["formID"];
+        $formName = $this->jotformAPI->getForm($formID)["title"];
         $this->setFormAndSubmissions($formID);
         $qid = $args["mcq"];
         $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
+
+        $formArr = $this->formList;
         
         $submissionArr = array();
         foreach($this->submissions as $s){
@@ -106,30 +111,57 @@ class ChartController{
         }
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         
-        return $this->c->view->render($response,"designed/index.twig",compact("submissionArr","question"));
+        return $this->c->view->render($response,"designed/checkbox/index.twig",compact("formArr","formName","formID","submissionArr","question"));
+    }
+
+    public function index2($request,$response,$args) {
+        $formID = $args["formID"];
+        $formName = $this->jotformAPI->getForm($formID)["title"];
+        $this->setFormAndSubmissions($formID);
+        $qid = $args["mcq"];
+        $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
+
+        $formArr = $this->formList;
+        
+        $submissionArr = array();
+        foreach ($this->submissions as $s) {
+            array_push($submissionArr,array($s["created_at"],$s["answers"][$qid]["answer"],$s["id"]));
+        }
+        $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
+        
+        $responseData = array(
+            'formName' => $formName
+        );
+        return $response->withJson($responseData);
     }
 
     public function radioIndex($request,$response,$args){
 
         $formID = $args["formID"];
+        $formName = $this->jotformAPI->getForm($formID)["title"];
         $this->setFormAndSubmissions($formID);
         $qid = $args["scq"];
         $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
 
+        $formArr = $this->formList;
+
         $submissionArr = array();
         foreach($this->submissions as $s){
             array_push($submissionArr,array($s["created_at"],$s["answers"][$qid]["answer"],$s["id"]));
         }
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
 
-        return $this->c->view->render($response, "designed/radio/radio_index.twig",compact("question","submissionArr"));
+        return $this->c->view->render($response, "designed/radio/radio_index.twig",compact("formArr","formName","formID","question","submissionArr"));
     }
 
     public function dropdownIndex($request,$response,$args){
         $formID = $args["formID"];
+        $formName = $this->jotformAPI->getForm($formID)["title"];
         $this->setFormAndSubmissions($formID);
         $qid = $args["ddq"];
         $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
+        
+        $formArr = $this->formList;
 
         $submissionArr = array();
         foreach($this->submissions as $s){
@@ -137,7 +169,7 @@ class ChartController{
         }
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
 
-        return $this->c->view->render($response, "designed/dropdown/dropdown_index.twig",compact("question","submissionArr"));
+        return $this->c->view->render($response, "designed/dropdown/dropdown_index.twig",compact("formArr","formName","formID","question","submissionArr"));
     }
 
     /*
@@ -146,9 +178,12 @@ class ChartController{
     public function timeBasis($request,$response,$args){
         
         $formID = $args["formID"];
+        $formName = $this->jotformAPI->getForm($formID)["title"];
         $this->setFormAndSubmissions($formID);
         $qid = $args["mcq"];
         $questionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$qid);
+
+        $formArr = $this->formList;
 
         $submissionArr = array();
         foreach($this->submissions as $s){
@@ -156,7 +191,7 @@ class ChartController{
         }
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         
-        return $this->c->view->render($response,"designed/time_basis.twig",compact("question","submissionArr"));
+        return $this->c->view->render($response,"designed/checkbox/time_basis.twig",compact("formArr","formName","formID","question","submissionArr"));
     }
 
     public function radioTimeBasis($request,$response,$args){
@@ -170,6 +205,7 @@ class ChartController{
     public function relatedStats($request,$response,$args){
         
         $formID = $args["formID"];
+        $formName = $this->jotformAPI->getForm($formID)["title"];
         $this->setFormAndSubmissions($formID);
         $questions = $this->jotformAPI->getFormQuestions($formID);
         $qid = $args["mcq"];
@@ -178,6 +214,8 @@ class ChartController{
         $otherQid = $args["oq"];
         $otherQuestionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$otherQid);
         $otherQuestionType = $otherQuestionJSON["type"];
+
+        $formArr = $this->formList;
 
         $mcQuestions = array();
         $allQuestions = array();
@@ -194,11 +232,12 @@ class ChartController{
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         $otherQuestion = array($otherQuestionJSON["qid"],str_ireplace("'","",$otherQuestionJSON["text"]),$otherQuestionJSON["type"]);
 
-        return $this->c->view->render($response,"designed/related_stats.twig",compact("mcQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
+        return $this->c->view->render($response,"designed/checkbox/related_stats.twig",compact("formArr","formName","mcQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
     }
 
     public function radioRelatedStats($request,$response,$args){
         $formID = $args["formID"];
+        $formName = $this->jotformAPI->getForm($formID)["title"];
         $this->setFormAndSubmissions($formID);
         $questions = $this->jotformAPI->getFormQuestions($formID);
         $qid = $args["scq"];
@@ -207,6 +246,8 @@ class ChartController{
         $otherQid = $args["oq"];
         $otherQuestionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$otherQid);
         $otherQuestionType = $otherQuestionJSON["type"];
+
+        $formArr = $this->formList;
 
         $scQuestions = array();
         $allQuestions = array();
@@ -223,11 +264,12 @@ class ChartController{
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         $otherQuestion = array($otherQuestionJSON["qid"],str_ireplace("'","",$otherQuestionJSON["text"]),$otherQuestionJSON["type"]);
 
-        return $this->c->view->render($response, "designed/radio/radio_related.twig", compact("scQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
+        return $this->c->view->render($response, "designed/radio/radio_related.twig", compact("formArr","formName","scQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
     }
 
     public function dropdownRelatedStats($request,$response,$args){
         $formID = $args["formID"];
+        $formName = $this->jotformAPI->getForm($formID)["title"];
         $this->setFormAndSubmissions($formID);
         $questions = $this->jotformAPI->getFormQuestions($formID);
         $qid = $args["ddq"];
@@ -236,6 +278,8 @@ class ChartController{
         $otherQid = $args["oq"];
         $otherQuestionJSON = $this->jotformAPI->getFormQuestion($this->form["id"],$otherQid);
         $otherQuestionType = $otherQuestionJSON["type"];
+
+        $formArr = $this->formList;
 
         $ddQuestions = array();
         $allQuestions = array();
@@ -252,7 +296,7 @@ class ChartController{
         $question = array($questionJSON["qid"],str_ireplace("'","",$questionJSON["text"]),$this->giveOptionsArray($questionJSON["options"]));
         $otherQuestion = array($otherQuestionJSON["qid"],str_ireplace("'","",$otherQuestionJSON["text"]),$otherQuestionJSON["type"]);
 
-        return $this->c->view->render($response, "designed/dropdown/dropdown_related.twig", compact("ddQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
+        return $this->c->view->render($response, "designed/dropdown/dropdown_related.twig", compact("formArr","formName","ddQuestions","allQuestions","submissionArr","question","otherQuestion","formID"));
     }
 
     /*

@@ -23,6 +23,9 @@ $app->group('/jotcharts',function(){
                 $this->get('/{mcq}',ChartController::class.":index");
                 $this->post('/{mcq}',ChartController::class.":index");
             });
+            $this->group('/bar-radar2',function(){
+                $this->get('/{mcq}',ChartController::class.":index2");
+            });
             $this->group('/time-basis',function(){
                 $this->get('/{mcq}',ChartController::class.":timeBasis");
                 $this->post('/{mcq}',ChartController::class.":timeBasis");

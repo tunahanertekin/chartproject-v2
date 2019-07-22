@@ -9,14 +9,70 @@
     </a>
   </div>
 
-  {% set currentPath = app.request.uri %}
 
   {% if noAboveLink is null %}
-    <div style="font-weight:bold;font-style:italic;color:rgba(111,66,193,0.7);padding-left:4%;background: linear-gradient(to bottom, #fe8800 0%, white 100%);" class="headerDiff">
-      <a style="color:rgba(111,66,193,0.7);text-decoration: none;" href="/public/jotcharts">JotCharts</a>
+    <div style="font-weight:bold;font-style:italic;color:rgba(111,66,193,0.7);padding-left:4%;padding-right:4%;background: linear-gradient(to bottom, #fe8800 0%, #f8f9fa 100%);" class="headerDiff">
+      <a style="color:rgba(111,66,193,0.7);text-decoration: none;float:left;" href="/public/jotcharts/{{ formID }}">JotCharts</a>&nbsp
+      <a onclick="popup()" class="secondaryFont" style="font-weight:normal;font-style:normal;color:#343a40;text-decoration:none;" href="#"> | {{ formName }} </a>
     </div>
+    <div id="myModalForm" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+            <div class="altHeaderv2"><a style="color:#6f42c1;float:left;text-decoration:none;" href="/public/jotcharts">&nbsp JotCharts</a></div>
+            {% for form in formArr %}
+
+                <a style="border-radius: 0px;" class="bigButton" href="/public/jotcharts/{{form["id"]}}">
+
+                    <div class="glassColumn" style="width:33%;">
+                        
+                        <div style="float:left;font-weight: normal;font-size:12px;font-style:italic;">
+                            Modified on {{ form["created_at"]|date("M d, Y") }}
+                        </div>
+                    </div>
+
+                    <div class="glassColumn" style="width:33%;">
+                        <font size="4px;" style="float:center;"> {{form["title"]}} </font> 
+                    </div>
+
+                    <div class="glassColumn" style="width:33%;">
+                        <font style="float:right;">Submissions</font>
+                     <br> <font style="float:right;font-size:40px;"> {{ form["count"] }} </font> 
+                    </div>
+
+                </a>
+                <br>
+            
+            {% endfor %}
+      </div>
+    
+    </div>
+
+    <script>
+      function popup(){
+
+        var modal = document.getElementById("myModalForm");
+        
+        modal.style.display = "block";
+
+        var span = document.getElementsByClassName("close")[0];
+
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+      }
+    </script>
+
   {% endif %}
   
+
 
   <div style="text-align:center">
           {% block content %}{% endblock %}
