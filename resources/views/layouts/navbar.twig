@@ -13,7 +13,7 @@
   {% if noAboveLink is null %}
     <div style="font-weight:bold;font-style:italic;color:rgba(111,66,193,0.7);padding-left:4%;padding-right:4%;background: linear-gradient(to bottom, #fe8800 0%, #f8f9fa 100%);" class="headerDiff">
       <a style="color:rgba(111,66,193,0.7);text-decoration: none;float:left;" href="/public/jotcharts/{{ formID }}">JotCharts</a>&nbsp
-      <a onclick="popup()" class="secondaryFont" style="font-weight:normal;font-style:normal;color:#343a40;text-decoration:none;" href="#"> | {{ formName }} </a>
+      <a id="formName" onclick="popup()" class="secondaryFont" style="font-weight:normal;font-style:normal;color:#343a40;text-decoration:none;" href="#"> |  </a>
     </div>
     <div id="myModalForm" class="modal">
 
